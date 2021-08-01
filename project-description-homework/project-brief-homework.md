@@ -81,11 +81,11 @@ Fitbit challenges)
 
 
 ## 🧭 Architecture diagram
-![diagram](architecture-diagram.png)
+![diagram](diagrams/architecture-diagram.png)
 
 
 ## 📝 Flow chart
-![flowchart](system-flow-diagram.png)
+![flowchart](diagrams/system-flow-diagram.png)
 
 
 ## 👷 Team's approach to the project work
