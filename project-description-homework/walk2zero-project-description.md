@@ -33,7 +33,7 @@ for 27% of all UK greenhouse gas emissions that year (Department for Transport,
 2021). Globally, transport accounts for around a quarter of CO<sub>2</sub> 
 emissions and there are concerns that this is hindering progress towards the 
 Paris Climate Agreement, which saw countries set an ambitious goal to limit the 
-global temperature rise this century to " well below 2, preferably to 1.5 
+global temperature rise this century to "well below 2, preferably to 1.5 
 degrees Celsius, compared to pre-industrial levels" (UNFCC, 2021).  
 
 In this world of unprecedented calamities that are occurring as byproducts of 
