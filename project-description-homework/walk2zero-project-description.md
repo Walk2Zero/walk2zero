@@ -1,4 +1,4 @@
-# Walk2Zero
+# Software Week 2 Homework – Walk2Zero Project Description
 
 ## 👯 The Team‍️
 - [Lakshika Juneja](https://github.com/Laksh-13)
