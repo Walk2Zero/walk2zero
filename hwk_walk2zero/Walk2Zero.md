@@ -108,6 +108,31 @@ roles will be interchangeable this time.
 
 
 ### Code Management
+#### Version Control
+We are managing our code using Git version control and remotely hosting the 
+project repository on GitHub. Several developer branches will be created. Each 
+developer branch will be created to work on a specific task and will be checked 
+out by one person at a time. As mentioned earlier, we are using the Kanban 
+boards within GitHub to manage the tasks and track who is working on what and 
+who has checked out each branch. Branches will be merged into main after they 
+have been tested.
+
+#### Directories and Files
+We will have an organised and structured directory tree. The code will be split 
+across several files and will include a main script, unit test scripts, 
+a db utils file, a db config file, a flask app file, a script containing the 
+algorithms that calculate carbon emissions for different modes of transport 
+and any others that will be required.
+
+#### The Code Itself
+We will implement suitable class, method and variable names that are not too 
+long but are descriptive enough to understand what they are. For example, a 
+suitable method name would be `calc_carb` rather than `calculate_carbon` (which 
+is a bit long) or `cc` (which is not descriptive enough). 
+
+The code will be written using the Object Orientated Programming (OOP) style 
+and will make use of reusable blocks of code. This will make development as a 
+team easier, as each person can be working on a small block.
 
 
 ### Testing Plan
