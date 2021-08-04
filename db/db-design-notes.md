@@ -45,9 +45,9 @@ I initially designed this table as it appears separately and on its own in the
 top right of the diagram. This made sense initially, however I'm not sure if it 
 integrates nicely with the rest of the DB. I have put my preferred table in the 
 actual DB design but we might want to go back to the old version later 
-depending on how we want to write the Python code. I've also left this in as 
-the transportation types listed as columns could be the options we let the 
-users select when they register their own transportation types.  
+depending on how we want to write the Python code. I've also left the old 
+version in as the transportation types listed as columns could be the options 
+we let the users select when they register their own transportation types.  
 
 
 ## Further DB development
