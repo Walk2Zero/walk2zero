@@ -70,6 +70,14 @@ maximum walking distance they would be capable of, which would override our
 built-in maximum walking distance metric (the same could be done for cycling).
 
 
+### Miles or kilometers
+We need to decide if we are using miles or kilometers. The final product would 
+let the user specify their preferred distance measurement but I think we should 
+build the prototype with just one. Although we mainly use miles in the UK, I 
+think we should build the app using km as it is easier to calculate. We can 
+add in the miles option later if we have time.  
+
+
 ### Further DB development
 We will probably need to add more tables to the DB as we go. I was thinking 
 that the feature to be able to compare the total carbon offset to other things 
