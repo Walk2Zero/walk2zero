@@ -1,10 +1,18 @@
 # Database Design Notes
 
-## Normalisation
+-------------------------------------------------------------------------------
+## 2021-XX-XX (team member)
+Next note goes here
+
+
+-------------------------------------------------------------------------------
+## 2021-08-04 (Robyn)
+
+### Normalisation
 Have tried to normalise DB to 3NF. Some table choices might seem odd (e.g. 
 having a table just for distances) but this is to keep it in 3NF.  
 
-### 1NF
+#### 1NF
 * columns in a table are unique (i.e. no two columns in one table share the 
 same name or contain the same data)  
 
@@ -15,7 +23,7 @@ cell)
 * each record in a table is unique, e.g.  
   * primary keys used to make sure duplicate records are not allowed  
 
-### 2NF
+#### 2NF
 * no partial functional dependencies (i.e. if the primary key is a composite 
 key, then every non-key column depends on ALL of the primary key columns, not 
 on only some of them), e.g.  
@@ -31,7 +39,7 @@ journey_id to locate the specific distance you are after
 user_id and the journey_id to locate the specific carbon emitted and carbon 
 saved for a journey  
 
-### 3NF
+#### 3NF
 * no transitive functional dependencies (i.e. no column depends on a non-key 
 column), e.g.  
   * I moved the distance column out of the journeys table and into its own 
@@ -40,7 +48,7 @@ table as the distance is dependent on the origin and destination columns
 table as these depend on the origin, destination and vehicle_id columns  
 
 
-## User Vehicles Table
+### User Vehicles Table
 I initially designed this table as it appears separately and on its own in the 
 top right of the diagram. This made sense initially, however I'm not sure if it 
 integrates nicely with the rest of the DB. I have put my preferred table in the 
@@ -50,7 +58,19 @@ version in as the transportation types listed as columns could be the options
 we let the users select when they register their own transportation types.  
 
 
-## Further DB development
+### User mobility ability
+I was trying to think about how we could let a user provide details on things 
+like their age and mobility. To avoid all this private data being collected and 
+stored, we could just ask the user to register foot (or a different, more 
+appropriate word that would capture wheelchair users too) as a "user vehicle". 
+This would use our built-in metric (e.g. walking distances only provided if 
+journey is less than 5 km). This would be the most basic version of the system 
+and in the next sprint we could add a feature that lets the user register the 
+maximum walking distance they would be capable of, which would override our 
+built-in maximum walking distance metric (the same could be done for cycling).
+
+
+### Further DB development
 We will probably need to add more tables to the DB as we go. I was thinking 
 that the feature to be able to compare the total carbon offset to other things 
 such as number of trees planted could be a "nice to have" feature, rather than 
