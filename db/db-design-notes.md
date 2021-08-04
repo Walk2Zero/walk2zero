@@ -35,14 +35,14 @@ have a journey_id of 15 for example, so you need to know the user_id to know
 which journey 15 the distance refers to  
 
   * in the emissions table, you need to know both the user_id and the 
-journey_id to locate the specific carbon emitted and carbon saved for a journey  
+journey_id to locate the specific carbon emitted for a journey  
 
 
 #### 3NF
 * no transitive functional dependencies (i.e. no column depends on a non-key 
 column), e.g.  
 
-  * I moved the carbon_emitted and carbon_saved columns out of the journeys 
+  * I moved the carbon_emitted column out of the journeys 
 table as these depend on the distance and vehicle_id columns  
 
 
@@ -100,6 +100,18 @@ let the user specify their preferred distance measurement but I think we should
 build the prototype with just one. Although we mainly use miles in the UK, I 
 think we should build the app using km as it is easier to calculate. We can 
 add in the miles option later if we have time.  
+
+
+### Emissions table
+This table stores the carbon emitted for each journey. I have only included 
+carbon emitted and no details on carbon saved. We will probably want to decide 
+later if we want to store things like total carbon saved per user and total 
+journeys made per user in the DB or if we just calculate those with Python. We 
+also need to decide what carbon saved actually is. It is carbon saved but in 
+comparison to what? Each users stored transport method? Or does the user 
+specify and intended transport method then they select a better one? I think 
+the first option is probably best. But will need to be incorporated into the 
+app somehow.
 
 
 ### Further DB development
