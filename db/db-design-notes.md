@@ -57,6 +57,17 @@ depending on how we want to write the Python code. I've also left the old
 version in as the transportation types listed as columns could be the options 
 we let the users select when they register their own transportation types.  
 
+I think we should just have a selection of general vehicle types with default 
+carbon emissions per km that we program in. A future version would allow the 
+user to register a vehicle and get more precise carbon emissions for that 
+vehicle, for example they could select their specific make, model and age of 
+car and store it to their account. If they had more than one car in their 
+household, the journey results could display the total emissions for both 
+vehicles and they can then decide which one to drive for that particular 
+journey. This is not something we will do for the Nanodegree as it would 
+require finding another API, one that has data on the carbon emissions of most 
+cars or building this API from scratch.
+
 
 ### User mobility ability
 I was trying to think about how we could let a user provide details on things 
