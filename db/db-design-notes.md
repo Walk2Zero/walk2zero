@@ -9,8 +9,7 @@ Next note goes here
 ## 2021-08-04 (Robyn)
 
 ### Normalisation
-Have tried to normalise DB to 3NF. Some table choices might seem odd (e.g. 
-having a table just for distances) but this is to keep it in 3NF.  
+Have tried to normalise DB to 3NF.
 
 #### 1NF
 * columns in a table are unique (i.e. no two columns in one table share the 
@@ -27,25 +26,24 @@ cell)
 * no partial functional dependencies (i.e. if the primary key is a composite 
 key, then every non-key column depends on ALL of the primary key columns, not 
 on only some of them), e.g.  
+
   * the journeys table has a composite primary key but every detail of a 
 journey (value in each column of a specific record) depends on both primary key 
 columns (i.e. you need to know both the user_id and the journey_id to be able 
-to say what the destination of a particular journey was - multiple users will 
+to say what the distance of a particular journey was - multiple users will 
 have a journey_id of 15 for example, so you need to know the user_id to know 
-which journey 15 the destination refers to  
-  * in the journey_distances table, you need to know both the user_id and the 
-journey_id to locate the specific distance you are after  
-  * in the journey_carb_emissions table, you again need to know both the 
-user_id and the journey_id to locate the specific carbon emitted and carbon 
-saved for a journey  
+which journey 15 the distance refers to  
+
+  * in the emissions table, you need to know both the user_id and the 
+journey_id to locate the specific carbon emitted and carbon saved for a journey  
+
 
 #### 3NF
 * no transitive functional dependencies (i.e. no column depends on a non-key 
 column), e.g.  
-  * I moved the distance column out of the journeys table and into its own 
-table as the distance is dependent on the origin and destination columns  
+
   * I moved the carbon_emitted and carbon_saved columns out of the journeys 
-table as these depend on the origin, destination and vehicle_id columns  
+table as these depend on the distance and vehicle_id columns  
 
 
 ### User Vehicles Table
@@ -79,6 +77,21 @@ journey is less than 5 km). This would be the most basic version of the system
 and in the next sprint we could add a feature that lets the user register the 
 maximum walking distance they would be capable of, which would override our 
 built-in maximum walking distance metric (the same could be done for cycling).
+
+
+## Journeys table
+For the journey date and time, TIMESTAMP could have been used to calculate the 
+date and time that the entry was stored in the DB. I think it is better to use 
+DATETIME and get the current date and time in Python when we ask the user to 
+log their journey.  
+
+j_name is a field that will be generated within Python and will include the 
+origin and destination, e.g. "\<origin> to \<destination>". It would be visible 
+in the user's journey history like this. I couldn't put an origin and 
+destination column in this table as distance depends on the origin and 
+destination so it would stop the journey table being in 3NF. We might need to 
+review this table structure when we are more familiar with the google maps API 
+or if we want to store the origin and destination locations.
 
 
 ### Miles or kilometers
