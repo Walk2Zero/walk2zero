@@ -1,4 +1,0 @@
-Acceptance Criteria for Google Maps API Branch
-
-- I should be able to input an origin location and destinations.
-- The distance for each mode of transport should be returned.

@@ -1,5 +1,4 @@
 import requests
-import pprint as pp
 
 
 def input_locations():
@@ -24,12 +23,17 @@ def get_distance(origin, destination):
     :param destination: inputted destination
     :return: origin address, destination address and distances & durations of route for each mode of transport.
     """
-    api_key = "Your API Key"
+    api_key = "Your API keys"
     modes = ["driving", "walking", "bicycling", "transit"]
     distances = dict()
     durations = dict()
     for mode in modes:
-        uri = f'https://maps.googleapis.com/maps/api/distancematrix/json?origins={origin}&destinations={destination}&mode={mode}&key={api_key}&language=en-GB'
+        uri = f'https://maps.googleapis.com/maps/api/distancematrix/json?' \
+              f'origins={origin}&' \
+              f'destinations={destination}&' \
+              f'mode={mode}&' \
+              f'key={api_key}&language=en-GB'
+
         response = requests.get(uri)
         output = response.json()
 
