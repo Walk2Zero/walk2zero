@@ -3,8 +3,8 @@ import requests
 
 def input_locations():
     """
-    This allows the user to input the locations of the origin and destination and then puts these into the function to
-    get the distance
+    This allows the user to input the locations of the origin and destination, assigns them to variables and returns
+    these variables.
 
     :return: inputted origins and destination
     """
@@ -20,10 +20,12 @@ def get_distance(origin, destination):
     available.
 
     :param origin: inputted origin
+    :type origin: string
     :param destination: inputted destination
+    :type destination: string
     :return: origin address, destination address and distances & durations of route for each mode of transport.
     """
-    api_key = "Your API keys"
+    api_key = "Your API key here"
     modes = ["driving", "walking", "bicycling", "transit"]
     distances = dict()
     durations = dict()
