@@ -1,6 +1,7 @@
 CREATE DATABASE walk2zero;
 USE walk2zero;
 
+
 -- ------------------------------------------------------------------------------------
 -- 1. Create tables.
 -- ------------------------------------------------------------------------------------
@@ -118,7 +119,6 @@ VALUES
 -- 3. Triggers to auto fill fields.
 -- ------------------------------------------------------------------------------------
 
-
 -- Create function to calculate total carbon emitted on a journey.
 -- This is used in the after_journey_insert trigger to insert the carbon emissions of 
 -- a journey into the emissions table after the journey is entered in the journeys table.
@@ -143,6 +143,7 @@ DELIMITER ;
 
 
 -- Trigger to calculate carbon emissions of a journey and populate the emissions table.
+
 DELIMITER //
 CREATE TRIGGER after_journey_insert
     AFTER INSERT ON journeys
@@ -159,6 +160,7 @@ DELIMITER ;
 -- ------------------------------------------------------------------------------------
 -- 4. Populate tables with examples.
 -- ------------------------------------------------------------------------------------
+
 SELECT * FROM users;
 SELECT * FROM vehicles;
 SELECT * FROM user_vehicles;
@@ -171,7 +173,7 @@ VALUES
 ('Elen', 'Williams', 'ewillams@gemail.com', 'ewill95'),
 ('Owen', 'Parry', 'oparry@gemail.com', 'mybadpassword');
 
-INSERT INTO user_vehiclesemissions
+INSERT INTO user_vehicles  -- LJ added "emissions" but without change in table name - double check 
 (user_id, vehicle_id)
 VALUES
 (1, 1),  -- elen foot
@@ -186,4 +188,3 @@ VALUES
 (1, 2, '2021-08-04 10:00:00', 'test2', 5, 9),
 (2, 1, '2021-08-03 16:30:00', 'test3', 2, 1),
 (2, 2, '2021-08-03 19:00:00', 'test4', 4, 2);
-
