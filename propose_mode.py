@@ -28,6 +28,8 @@ def propose_modes(distances):
     distances = str_to_float(distances)
     if distances['walking'] > 5:
         del distances['walking']
+    if distances['bicycling'] > 100:
+        del distances['bicycling']
 
     return distances
 
