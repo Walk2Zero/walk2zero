@@ -22,8 +22,6 @@ Mock_API_return = {'driving': 4.7, 'walking': 7.0, 'bicycling': 5.6, 'transit': 
 
 #Function that matches the vehicle DM to all options of travel medium possible proposed by the API
 def API_DB_map(vehicle_DB): 
-    #Vehicle_DB would be th input
-    #vehicle_DB = [(1, 'foot', 0), (2, 'bicycle', 21), (3, 'b_car', 69), (4, 'motorbike', 145), (5, 'ph_car', 124), (6, 'petrol_car', 223), (7, 'diesel_car', 209),(8, 'taxi', 259), (9, 'transit', 127)]
     df = pd.DataFrame (vehicle_DB, columns = ['v_id', 'v_name', 'e_value']) #list of tuples to df conversion
     
     #creating a list of conditions to match vehicle_DB to API choices
