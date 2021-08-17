@@ -1,12 +1,12 @@
 import re  # for checking email address against regex
-from cli_components import CliStyles
-from db_utils import DbQueryFunctions as Db
+from cli_components import CliStyle, CliComponent
+from db_utils import DbQueryFunction as Db
 
 
 class Cli:
 
     def __init__(self):
-        CliStyles.welcome_banner()
+        CliComponent.welcome_banner()
 
 
 class User:
@@ -17,10 +17,19 @@ class User:
         self.lname = None
         self.email = None
         self.logged_in = False
+        self.vehicles = []  # list of vehicle_id numbers
+
 
     def login(self):
+        """Log in a user.
 
-        @CliStyles.heading_1
+        This method takes an email address as a user input. It assigns this to
+        self.email and calls check_email to see if the email address is already
+        in the DB. If the email address is already in the DB, it will run the
+        self.verify_password method. If the email address is not in the
+        database, it will run the self.register method.
+        """
+        @CliStyle.heading_1
         def login_heading():
             print("Log In / Register")
 
@@ -42,19 +51,25 @@ class User:
             self.login()
 
         except SystemExit:
-            CliStyles.thank_you()
+            CliComponent.thank_you()
 
         else:
             if Db.check_email(self.email):
                 # print("Thank you. You are already registered.")
                 self.verify_password()
-                self.user_action()
             else:
                 print("\nIt looks like you are a new user.")
                 self.register()
-                self.user_action()
+
 
     def verify_password(self):
+        """Takes password input and verifies this against the database.
+
+        This method takes a password as a user input. It calls authenticate to
+        query the users table of the DB to check if the inputted password
+        matches that of the user in the DB. It this is verified, it populates
+        the object attributes with the user_id, fname and lname from the DB.
+        """
         pword = input("Password: ")  # not stored to self for security
 
         try:
@@ -67,19 +82,26 @@ class User:
                 self.fname = user_dict["fname"]
                 self.lname = user_dict["lname"]
                 self.logged_in = True
+                self.user_action()
             else:
                 raise ValueError
 
         except SystemExit:
-            CliStyles.thank_you()
+            CliComponent.thank_you()
 
         except ValueError:
             print("Incorrect password. Try again.")
             self.verify_password()
 
-    def register(self):
 
-        @CliStyles.heading_1
+    def register(self):
+        """Registers a new user.
+
+        This method takes fname, lname and a password as inputs and assigns
+        them to self. It calls new_user, which saves these to the database.
+        Finally, it sets self.logged_in to True.
+        """
+        @CliStyle.heading_1
         def reg_message():
             print("New User Registration")
 
@@ -103,7 +125,7 @@ class User:
                 raise ValueError
 
         except SystemExit:
-            CliStyles.thank_you()
+            CliComponent.thank_you()
 
         except ValueError:
             print("Ooops, that value isn't accepted.\n"
@@ -115,25 +137,38 @@ class User:
             self.user_id = Db.get_new_user_id(self.email)
             self.logged_in = True
 
-    def user_action(self):
 
-        @CliStyles.heading_1
+    def user_action(self):
+        """Retrieves user choice about which action to perform from main menu.
+
+        This method displays the main user menu. It then accepts user input and
+        for them to pick which action they want to perform and then it runs the
+        corresponding function.
+        """
+
+        @CliStyle.heading_1
         def user_menu_message():
             print(f"Welcome {self.fname}!")
 
-        CliStyles.user_main_menu()
+        CliComponent.user_main_menu()
 
+        # NOTE: I would like to put this function definition elsewhere but not
+        # sure where it would go. Maybe a new python file with other similar
+        # functions.
         def get_option():
             option = input("Enter option number: ")
 
             if option == "1":
-                print("Calculate a journey")
+                print("calculate a journey function is called here")
+                # Journey.calculate_journey()
             elif option == "2":
-                print("Show user stats")
+                print("display stats function is called here")
+                # self.display_stats()
             elif option == "3":
-                print("Add transport method")
+                print("register vehicle function is called here")
+                # self.register_vehicle()
             elif option == "4":
-                print("Log user out")
+                self.logout()
             else:
                 print("Ooops, try again.")
                 get_option()
@@ -141,17 +176,34 @@ class User:
         get_option()
 
 
-    # @staticmethod
-    # def logout():
-    #     CliStyles.thank_you()
-    #     CliStyles.welcome_banner()
-    #     user = User()
-    #     user.login()
+    # def register_vehicle(self):
+
+
+    # def display_stats(self):
+
+
+
+    def logout(self):
+        """Logs a user out of the system and restarts the program."""
+        CliComponent.thank_you()
+
+        self.user_id = None
+        self.fname = None
+        self.lname = None
+        self.email = None
+        self.logged_in = False
+        self.vehicles = []
+
+        CliComponent.welcome_banner()
+        self.login()
 
 
 # class Journey:
 #
 #     def __init__(self):
+#
+#       def calculate_journey(self):
+#
 
 
 def main():
@@ -166,4 +218,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

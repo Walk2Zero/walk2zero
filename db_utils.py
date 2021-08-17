@@ -1,3 +1,10 @@
+"""Database Utilities
+
+This script creates a connection to the walk2zero database. It also contains
+all of the functions that query the database. These are within the
+DbQueryFunction class.
+"""
+
 import mysql.connector as mysql
 from config import USER, PASSWORD, HOST
 
@@ -21,7 +28,7 @@ class DbConnection:
         return cnx
 
 
-class DbQueryFunctions:
+class DbQueryFunction:
 
     @staticmethod
     def check_email(email):
@@ -98,7 +105,6 @@ class DbQueryFunctions:
                 "lname": result[0][2]
             }
             return user_dict
-
 
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
