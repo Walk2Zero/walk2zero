@@ -5,7 +5,6 @@ methods that print decorative strings (e.g. lines) that make it easier to
 understand where they are in the app.
 """
 
-
 import pyfiglet
 
 
@@ -24,13 +23,25 @@ class CliComponent:
               f"\n\n(To exit enter 'q')")
 
     @staticmethod
-    def user_main_menu():
+    def display_main_menu():
         """Prints the main user menu."""
         print("Please select from the following options:\n\n"
               "    (1) plan journey\n"
               "    (2) view user stats\n"
               "    (3) register a vehicle\n"
               "    (4) log out\n")
+
+    @staticmethod
+    def display_user_stats(total_journeys, total_co2_emitted, total_co2_offset):
+        """Displays the user's statistics.
+
+        This method prints the total carbon emitted and the total carbon
+        offset by all journeys made by a user alongside some of their other
+        key statistics.
+        """
+        print(f"Journeys made: {total_journeys}\n"
+              f"CO2e emitted by all journeys: {total_co2_emitted}\n"
+              f"CO2e offset by walking to zero: {total_co2_offset}\n")
 
     @staticmethod
     def thank_you():

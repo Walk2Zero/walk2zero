@@ -148,3 +148,69 @@ class DbQueryFunction:
         finally:
             if db_connection:
                 db_connection.close()
+
+    @staticmethod
+    def get_total_user_journeys(user_id):
+        try:
+            db_connection = DbConnection.connect_to_db()
+            cur = db_connection.cursor()
+            query = f"""
+                    SELECT COUNT(journey_id)
+                    FROM journeys
+                    WHERE user_id = '{user_id}'
+                    """
+            cur.execute(query)
+            result = cur.fetchall()
+            total_user_journeys = result[0][0]
+            return total_user_journeys
+
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+
+        finally:
+            if db_connection:
+                db_connection.close()
+
+    @staticmethod
+    def get_total_co2_emitted(user_id):
+        try:
+            db_connection = DbConnection.connect_to_db()
+            cur = db_connection.cursor()
+            query = f"""
+                    SELECT SUM(carbon_emitted)
+                    FROM emissions
+                    WHERE user_id = '{user_id}'
+                    """
+            cur.execute(query)
+            result = cur.fetchall()
+            total_co2_emitted = result[0][0]
+            return total_co2_emitted
+
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+
+        finally:
+            if db_connection:
+                db_connection.close()
+
+    @staticmethod
+    def get_total_co2_saved(user_id):
+        try:
+            db_connection = DbConnection.connect_to_db()
+            cur = db_connection.cursor()
+            query = f"""
+                    SELECT SUM(carbon_saved)
+                    FROM emissions
+                    WHERE user_id = '{user_id}'
+                    """
+            cur.execute(query)
+            result = cur.fetchall()
+            total_co2_saved = result[0][0]
+            return total_co2_saved
+
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+
+        finally:
+            if db_connection:
+                db_connection.close()
