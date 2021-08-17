@@ -3,7 +3,7 @@ from cli_components import CliStyle, CliComponent
 from db_utils import DbQueryFunction as Db
 
 
-class Cli:
+class Walk2ZeroApp:
 
     def __init__(self):
         CliComponent.welcome_banner()
@@ -18,6 +18,9 @@ class User:
         self.email = None
         self.logged_in = False
         self.vehicles = []  # list of vehicle_id numbers
+        self.total_journeys = 0
+        self.total_co2_emitted = 0
+        self.total_co2_offset = 0
 
 
     def login(self):
@@ -82,7 +85,7 @@ class User:
                 self.fname = user_dict["fname"]
                 self.lname = user_dict["lname"]
                 self.logged_in = True
-                self.user_action()
+                self.main_menu()
             else:
                 raise ValueError
 
@@ -136,9 +139,10 @@ class User:
             Db.new_user(self.fname, self.lname, self.email, pword)
             self.user_id = Db.get_new_user_id(self.email)
             self.logged_in = True
+            self.main_menu()
 
 
-    def user_action(self):
+    def main_menu(self):
         """Retrieves user choice about which action to perform from main menu.
 
         This method displays the main user menu. It then accepts user input and
@@ -150,7 +154,7 @@ class User:
         def user_menu_message():
             print(f"Welcome {self.fname}!")
 
-        CliComponent.user_main_menu()
+        CliComponent.display_main_menu()
 
         # NOTE: I would like to put this function definition elsewhere but not
         # sure where it would go. Maybe a new python file with other similar
@@ -158,29 +162,30 @@ class User:
         def get_option():
             option = input("Enter option number: ")
 
-            if option == "1":
-                print("calculate a journey function is called here")
-                # Journey.calculate_journey()
-            elif option == "2":
-                print("display stats function is called here")
-                # self.display_stats()
-            elif option == "3":
-                print("register vehicle function is called here")
-                # self.register_vehicle()
-            elif option == "4":
-                self.logout()
-            else:
+            try:
+                if option in ['q', 'Q']:
+                    raise SystemExit
+                elif option == "1":
+                    print("calculate a journey function is called here")
+                    # Journey.calculate_journey()
+                elif option == "2":
+                    self.display_stats()
+                elif option == "3":
+                    print("register vehicle function is called here")
+                    # self.register_vehicle()
+                elif option == "4":
+                    self.logout()
+                else:
+                    raise ValueError
+
+            except SystemExit:
+                CliComponent.thank_you()
+
+            except ValueError:
                 print("Ooops, try again.")
                 get_option()
 
         get_option()
-
-
-    # def register_vehicle(self):
-
-
-    # def display_stats(self):
-
 
 
     def logout(self):
@@ -192,23 +197,49 @@ class User:
         self.lname = None
         self.email = None
         self.logged_in = False
-        self.vehicles = []
+        self.vehicles.clear()
+        self.total_journeys = 0
+        self.total_co2_emitted = 0
+        self.total_co2_offset = 0
 
         CliComponent.welcome_banner()
         self.login()
 
 
-# class Journey:
-#
-#     def __init__(self):
-#
-#       def calculate_journey(self):
-#
+    def calculate_user_stats(self):
+        """Fetches data from the database and saves as instance attributes.
+
+        This method runs the database functions that calculate the total
+        number of journeys made by a user, the total CO2e they have emitted on
+        those journeys and the total amount of CO2e they have offset on those
+        journeys by opting to take a transport option that emits a smaller
+        volume of GHGs than their worst registered mode of transport."""
+        self.total_journeys = Db.get_total_user_journeys(self.user_id)
+        self.total_co2_emitted = Db.get_total_co2_emitted(self.user_id)
+        self.total_co2_offset = Db.get_total_co2_saved(self.user_id)
+
+
+    def display_stats(self):
+
+        @CliStyle.heading_1
+        def user_stats_message():
+            print(f"User Statistics for {self.fname} {self.lname}")
+
+        self.calculate_user_stats()
+        CliComponent.display_user_stats(self.total_journeys,
+                                        self.total_co2_emitted,
+                                        self.total_co2_offset)
+        self.main_menu()
+
+
+    # def calculate_journey(self):
+
+    # def register_vehicle(self):
 
 
 def main():
     # instantiate cli
-    cli = Cli()
+    cli = Walk2ZeroApp()
     cli
     # instantiate user
     user = User()
