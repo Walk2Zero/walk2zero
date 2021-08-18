@@ -119,8 +119,6 @@ class Journey:
             print("Ooops, try again.")
             self.check_address()
 
-        self.str_to_float()
-
     def str_to_float(self):
         """
         Function to change the string distances in in the dictionary distances from the API and changes them into floats
