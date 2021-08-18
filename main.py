@@ -1,4 +1,5 @@
 import re  # for checking email address against regex
+import requests  # for google maps api
 from cli_components import CliStyle, CliComponent
 from db_utils import DbQueryFunction as Db
 
@@ -67,7 +68,6 @@ class User:
                 print("\nIt looks like you are a new user.")
                 self.register()
 
-
     def verify_password(self):
         """Takes password input and verifies this against the database.
 
@@ -98,7 +98,6 @@ class User:
         except ValueError:
             print("Incorrect password. Try again.")
             self.verify_password()
-
 
     def register(self):
         """Registers a new user.
@@ -172,8 +171,7 @@ class User:
                 if option in ['q', 'Q']:
                     raise SystemExit
                 elif option == "1":
-                    print("calculate a journey function is called here")
-                    # Journey.calculate_journey()
+                    self.calculate_journey()
                 elif option == "2":
                     self.display_stats()
                 elif option == "3":
@@ -197,7 +195,10 @@ class User:
     # Main Menu Option 1 – Calculate Journey
     # -------------------------------------------------------------------------
 
-    # def calculate_journey(self):
+    def calculate_journey(self):
+        journey = Journey(self.user_id)
+        journey.input_locations()
+        self.main_menu()
 
     # -------------------------------------------------------------------------
     # Main Menu Option 2 – Calculate User Stats
@@ -266,6 +267,147 @@ class User:
 
         CliComponent.welcome_banner()
         self.login()
+
+
+class Journey:
+
+    def __init__(self, user_id):
+        self.user_id = user_id
+        self.journey_id = None
+        self.j_datetime = None
+        self.origin = None
+        self.destination = None
+        self.distance = None
+        self.vehicle_id = None
+        self.distances = None
+
+    def input_locations(self):
+        """
+        This allows the user to input the locations of the origin and destination, assigns them to variables and returns
+        these variables.
+        :return: inputted origins and destination
+        """
+
+        @CliStyle.heading_1
+        def journey_heading():
+            print("Enter Journey Details")
+
+        self.origin = input("Enter your origin location: ")
+        try:
+            if self.origin in ['q', 'Q']:
+                raise SystemExit
+        except SystemExit:
+            CliComponent.thank_you()
+
+        self.destination = input("Enter your destination: ")
+        try:
+            if self.destination in ['q', 'Q']:
+                raise SystemExit
+        except SystemExit:
+            CliComponent.thank_you()
+
+        self.get_distance()
+
+    def get_distance(self):
+        """
+        This function takes the inputted origin and destination, then uses the google maps API to calculate the distances
+        and duration (take out if not needed) of the route. These are outputted for each mode of transport so they are all
+        available.
+        :param origin: inputted origin
+        :type origin: string
+        :param destination: inputted destination
+        :type destination: string
+        :return: origin address, destination address and distances & durations of route for each mode of transport.
+        """
+        api_key = "ENTER API KEY HERE"
+        modes = ["driving", "walking", "bicycling", "transit"]
+        distances = dict()
+
+        try:
+            for mode in modes:
+                uri = f'https://maps.googleapis.com/maps/api/distancematrix/json?' \
+                      f'origins={self.origin}&' \
+                      f'destinations={self.destination}&' \
+                      f'mode={mode}&' \
+                      f'key={api_key}&language=en-GB'
+
+                response = requests.get(uri)
+                output = response.json()
+
+                origin_address = output['origin_addresses']
+                destination_address = output['destination_addresses']
+
+                for obj in output['rows']:
+                    for data in obj['elements']:
+                        distance = data['distance']['text']
+
+                distances[mode] = distance
+
+            self.origin = origin_address[0]
+            self.destination = destination_address[0]
+            self.distances = distances
+        except:
+            print("Something has gone wrong! \n Try a new/clearer origin and destination.")
+            self.input_locations()
+
+        self.check_address()
+
+    def check_address(self):
+        print(f'Your origin address is: {self.origin}, \n'
+              f'Your origin address is: {self.destination}. \n'
+              f'Please select from the following options:\n'
+              f'    (1) Address shown are correct. \n'
+              f'    (2) Change Addresses \n')
+
+        option = input("Enter option number: ")
+
+        try:
+            if option in ['q', 'Q']:
+                raise SystemExit
+            elif option == "1":
+                print("Addresses accepted")
+                self.str_to_float()
+            elif option == "2":
+                print("Re-enter your origin and/or destination")
+                self.input_locations()
+            else:
+                raise ValueError
+
+        except SystemExit:
+            CliComponent.thank_you()
+
+        except ValueError:
+            print("Ooops, try again.")
+            self.check_address()
+
+    def str_to_float(self):
+        """
+        Function to change the string distances in in the dictionary distances from the API and changes them into floats
+        without "km".
+        :param distances: distances as dictionary (as would be received from the function get_distance())
+        :return: distances as dictionary where the values are floats of the distance (km)
+        """
+        for key, value in self.distances.items():
+            value = value.replace(',', '')
+            self.distances[key] = float(value[:-3])
+
+        self.propose_modes()
+
+    def propose_modes(self):
+        """
+        This function removes the "walking" mode, from the distances dictionary,if the distance of the journey is greater
+        than 5km as will no longer be a viable mode of transport.
+        :param distances: distances as dictionary (as would be received from the function get_distance())
+        :return: distances as dictionary only including the viable modes of transport
+        """
+        if self.distances['walking'] > 5:
+            del self.distances['walking']
+        if self.distances['bicycling'] > 100:
+            del self.distances['bicycling']
+        self.mode_mapping()
+
+    def mode_mapping(self):
+        print('Now we will map the modes')
 
 
 def main():

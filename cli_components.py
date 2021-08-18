@@ -45,37 +45,37 @@ class CliComponent:
               f"CO2e offset by walking to zero: {total_co2_offset}\n")
 
 
-    @staticmethod
-    def vehicle_registration_menu(user_id):
-
-        all_vehicles = DbQueryFunction.fetch_all_vehicles()
-        user_vehicles = DbQueryFunction.fetch_user_vehicles(user_id)
-
-        # =====================================================================
-        # CURRENTLY WORKING ON THIS
-        # =====================================================================
-        # Need to remove options from all_vehicles where keys in user_vehicles
-        # match vehicle_name. Then store those left over in
-        # registerable_vehicles.
-
-        print(all_vehicles)  # [{'vehicle_id': 1, 'vehicle_name': 'foot', 'carb_emit_km': 0}, {'vehicle_id': 2, 'vehicle_name': 'bicycle', 'carb_emit_km': 0}, {'vehicle_id': 3, 'vehicle_name': 'motorbike', 'carb_emit_km': 145}, {'vehicle_id': 4, 'vehicle_name': 'b_car', 'carb_emit_km': 69}, {'vehicle_id': 5, 'vehicle_name': 'ph_car', 'carb_emit_km': 124}, {'vehicle_id': 6, 'vehicle_name': 'petrol_car', 'carb_emit_km': 223}, {'vehicle_id': 7, 'vehicle_name': 'diesel_car', 'carb_emit_km': 209}, {'vehicle_id': 8, 'vehicle_name': 'taxi', 'carb_emit_km': 259}, {'vehicle_id': 9, 'vehicle_name': 'transit', 'carb_emit_km': 127}]
-        print(user_vehicles)  # {'foot': 0, 'transit': 127}
-
-        registrable_vehicles = # needs to be {vehicle_id: vehicle_name}
-        print(registrable_vehicles)
-
-
-        print("You currently have the following modes of transport registered\n"
-              "to your account:")
-        for i in user_vehicles.keys():
-            print(f"    – {i}")
-
-        print("\nDo you want any of the following modes of transport to be\n"
-              "considered when planning a journey?")
-        option_number = 0
-        for i in registrable_vehicles.keys():
-            option_number += 1
-            print(f"    ({option_number}) {i}")
+    # @staticmethod
+    # def vehicle_registration_menu(user_id):
+    #
+    #     all_vehicles = DbQueryFunction.fetch_all_vehicles()
+    #     user_vehicles = DbQueryFunction.fetch_user_vehicles(user_id)
+    #
+    #     # =====================================================================
+    #     # CURRENTLY WORKING ON THIS
+    #     # =====================================================================
+    #     # Need to remove options from all_vehicles where keys in user_vehicles
+    #     # match vehicle_name. Then store those left over in
+    #     # registrable_vehicles.
+    #
+    #     print(all_vehicles)  # [{'vehicle_id': 1, 'vehicle_name': 'foot', 'carb_emit_km': 0}, {'vehicle_id': 2, 'vehicle_name': 'bicycle', 'carb_emit_km': 0}, {'vehicle_id': 3, 'vehicle_name': 'motorbike', 'carb_emit_km': 145}, {'vehicle_id': 4, 'vehicle_name': 'b_car', 'carb_emit_km': 69}, {'vehicle_id': 5, 'vehicle_name': 'ph_car', 'carb_emit_km': 124}, {'vehicle_id': 6, 'vehicle_name': 'petrol_car', 'carb_emit_km': 223}, {'vehicle_id': 7, 'vehicle_name': 'diesel_car', 'carb_emit_km': 209}, {'vehicle_id': 8, 'vehicle_name': 'taxi', 'carb_emit_km': 259}, {'vehicle_id': 9, 'vehicle_name': 'transit', 'carb_emit_km': 127}]
+    #     print(user_vehicles)  # {'foot': 0, 'transit': 127}
+    #
+    #     registrable_vehicles = # needs to be {vehicle_id: vehicle_name}
+    #     print(registrable_vehicles)
+    #
+    #
+    #     print("You currently have the following modes of transport registered\n"
+    #           "to your account:")
+    #     for i in user_vehicles.keys():
+    #         print(f"    – {i}")
+    #
+    #     print("\nDo you want any of the following modes of transport to be\n"
+    #           "considered when planning a journey?")
+    #     option_number = 0
+    #     for i in registrable_vehicles.keys():
+    #         option_number += 1
+    #         print(f"    ({option_number}) {i}")
 
 
 
