@@ -52,12 +52,19 @@ def proposed_options(Mock_API_return,user_vehicles_DB,vehicle_DB):
     Proposed_Options = pd.merge(useroptions_df,Mock_API_return,on='API choices',how='left')
     #Calculating emissions based on the distance
     Proposed_Options['Total Emissions'] = Proposed_Options['e_value'] * Proposed_Options['distance']
-    #returning the dictionary of proposed options
-    proposed_mode = dict(Proposed_Options[['API choices','Total Emissions']].values)
-    return proposed_mode
+    #returning the df of proposed options as we need to push distance in to SQL DB.
+    return Proposed_Options[['API choices','distance','Total Emissions']]
+
+#Function to convert df to dictionary
+def df_dict(df,col_list):
+    dict1 = dict(df[col_list].values)
+    return dict1
 
 #Demo
-proposed_mode = proposed_options(Mock_API_return,user_vehicles_DB,vehicle_DB)    
+proposed_mode = proposed_options(Mock_API_return,user_vehicles_DB,vehicle_DB)   
+col_list = ['API choices','Total Emissions'] 
+dict2 = df_dict(proposed_mode,col_list)
+    
     
 
     
