@@ -8,6 +8,22 @@ understand where they are in the app.
 import pyfiglet
 from db_utils import DbQueryFunction as Db
 
+class CliStyle:
+    """A class to contain decorators that visually improve the CLI.
+
+    These decorators act as styles (think heading styles in Microsoft Word that
+    visually improve the CLI and help to delineate movement between different
+    sections of the program.
+    """
+
+    @staticmethod
+    def heading_1(func):
+        print("\n=============================================================="
+              "==================")
+        func()
+        print("=============================================================="
+              "==================")
+
 
 class CliComponent:
     """A class to contain command-line components, e.g. banners, menus etc."""
@@ -22,6 +38,14 @@ class CliComponent:
         print(f"{banner}"
               f"{slogan:^80}"
               f"\n\n(To exit enter 'q')")
+
+    @staticmethod
+    def header(text):
+        return print(f"\n======================================================"
+                     f"==========================\n"
+                     f"{text}\n"
+                     f"========================================================"
+                     f"========================")
 
     @staticmethod
     def display_main_menu():
@@ -92,24 +116,6 @@ class CliComponent:
               f"\n\n{ty_message_l4:^80}\n\n")
 
 
-class CliStyle:
-    """A class to contain decorators that visually improve the CLI.
 
-    These decorators act as styles (think heading styles in Microsoft Word that
-    visually improve the CLI and help to delineate movement between different
-    sections of the program.
-    """
 
-    @staticmethod
-    def heading_1(func):
-        print("\n=============================================================="
-              "==================")
-        func()
-        print("=============================================================="
-              "==================")
 
-    @staticmethod
-    def heading_2(func):
-        func()
-        print("\n--------------------------------------------------------------"
-              "------------------")

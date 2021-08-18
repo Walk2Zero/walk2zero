@@ -114,7 +114,7 @@ class DbQueryFunction:
                 db_connection.close()
 
     @staticmethod
-    def new_user(fname, lname, email, pword):
+    def enter_new_user(fname, lname, email, pword):
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -244,7 +244,6 @@ class DbQueryFunction:
             if db_connection:
                 db_connection.close()
 
-
     @staticmethod
     def fetch_user_vehicles(user_id):
         try:
@@ -273,7 +272,7 @@ class DbQueryFunction:
                 db_connection.close()
 
     @staticmethod
-    def write_user_vehicle(user_id, vehicle_id):
+    def write_user_vehicles(user_id, vehicle_id):
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
