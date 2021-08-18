@@ -220,7 +220,7 @@ class DbQueryFunction:
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
-            query = f"SELECT vehicle_id vehicle_name, carb_emit_km FROM vehicles"
+            query = f"SELECT vehicle_id, vehicle_name, carb_emit_km FROM vehicles"
             cur.execute(query)
 
         except Exception:
