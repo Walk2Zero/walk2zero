@@ -214,3 +214,79 @@ class DbQueryFunction:
         finally:
             if db_connection:
                 db_connection.close()
+
+    @staticmethod
+    def fetch_all_vehicles():
+        try:
+            db_connection = DbConnection.connect_to_db()
+            cur = db_connection.cursor()
+            query = f"SELECT vehicle_id vehicle_name, carb_emit_km FROM vehicles"
+            cur.execute(query)
+
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+
+        else:
+            result = cur.fetchall()
+            vehicle_list = []
+
+            for i in result:
+                vehicle = {
+                    "vehicle_id": i[0],
+                    "vehicle_name": i[1],
+                    "carb_emit_km": i[2]
+                }
+                vehicle_list.append(vehicle)
+
+            return vehicle_list  # [{'vehicle_id': 1, 'vehicle_name': 'foot', 'carb_emit_km': 0}, {'vehicle_id': 2, 'vehicle_name': 'bicycle', 'carb_emit_km': 0}, {'vehicle_id': 3, 'vehicle_name': 'motorbike', 'carb_emit_km': 145}, {'vehicle_id': 4, 'vehicle_name': 'b_car', 'carb_emit_km': 69}, {'vehicle_id': 5, 'vehicle_name': 'ph_car', 'carb_emit_km': 124}, {'vehicle_id': 6, 'vehicle_name': 'petrol_car', 'carb_emit_km': 223}, {'vehicle_id': 7, 'vehicle_name': 'diesel_car', 'carb_emit_km': 209}, {'vehicle_id': 8, 'vehicle_name': 'taxi', 'carb_emit_km': 259}, {'vehicle_id': 9, 'vehicle_name': 'transit', 'carb_emit_km': 127}]
+
+        finally:
+            if db_connection:
+                db_connection.close()
+
+
+    @staticmethod
+    def fetch_user_vehicles(user_id):
+        try:
+            db_connection = DbConnection.connect_to_db()
+            cur = db_connection.cursor()
+            query = f"""
+                    SELECT v.vehicle_name, v.carb_emit_km
+                    FROM vehicles AS v
+                    WHERE v.vehicle_id IN (
+                        SELECT uv.vehicle_id
+                        FROM user_vehicles AS uv
+                        WHERE user_id = '{user_id}')
+                    """
+            cur.execute(query)
+
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+
+        else:
+            result = cur.fetchall()
+            user_vehicles = dict(result)  # e.g. {'foot': 0, 'transit': 127}
+            return user_vehicles
+
+        finally:
+            if db_connection:
+                db_connection.close()
+
+    @staticmethod
+    def write_user_vehicle(user_id, vehicle_id):
+        try:
+            db_connection = DbConnection.connect_to_db()
+            cur = db_connection.cursor()
+            query = f"""
+                    INSERT INTO user_vehicles (user_id, vehicle_id) 
+                    VALUES ('{user_id}', '{vehicle_id}')
+                    """
+            cur.execute(query)
+            db_connection.commit()
+
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+
+        finally:
+            if db_connection:
+                db_connection.close()

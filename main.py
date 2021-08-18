@@ -17,11 +17,14 @@ class User:
         self.lname = None
         self.email = None
         self.logged_in = False
-        self.vehicles = []  # list of vehicle_id numbers
+        self.vehicles = {}
         self.total_journeys = 0
         self.total_co2_emitted = 0
         self.total_co2_offset = 0
 
+    # =========================================================================
+    # Log In / Register
+    # =========================================================================
 
     def login(self):
         """Log in a user.
@@ -141,6 +144,9 @@ class User:
             self.logged_in = True
             self.main_menu()
 
+    # =========================================================================
+    # Main Menu
+    # =========================================================================
 
     def main_menu(self):
         """Retrieves user choice about which action to perform from main menu.
@@ -172,7 +178,7 @@ class User:
                     self.display_stats()
                 elif option == "3":
                     print("register vehicle function is called here")
-                    # self.register_vehicle()
+                    self.register_vehicle()
                 elif option == "4":
                     self.logout()
                 else:
@@ -187,6 +193,62 @@ class User:
 
         get_option()
 
+    # -------------------------------------------------------------------------
+    # Main Menu Option 1 – Calculate Journey
+    # -------------------------------------------------------------------------
+
+    # def calculate_journey(self):
+
+    # -------------------------------------------------------------------------
+    # Main Menu Option 2 – Calculate User Stats
+    # -------------------------------------------------------------------------
+
+    def calculate_user_stats(self):
+        """Fetches data from the database and saves as instance attributes.
+
+        This method runs the database functions that calculate the total
+        number of journeys made by a user, the total CO2e they have emitted on
+        those journeys and the total amount of CO2e they have offset on those
+        journeys by opting to take a transport option that emits a smaller
+        volume of GHGs than their worst registered mode of transport."""
+        self.total_journeys = Db.get_total_user_journeys(self.user_id)
+        self.total_co2_emitted = Db.get_total_co2_emitted(self.user_id)
+        self.total_co2_offset = Db.get_total_co2_saved(self.user_id)
+
+    def display_stats(self):
+
+        @CliStyle.heading_1
+        def user_stats_message():
+            print(f"User Statistics for {self.fname} {self.lname}")
+
+        self.calculate_user_stats()
+        CliComponent.display_user_stats(self.total_journeys,
+                                        self.total_co2_emitted,
+                                        self.total_co2_offset)
+        self.main_menu()
+
+    # -------------------------------------------------------------------------
+    # Main Menu Option 3 – Register Vehicle
+    # -------------------------------------------------------------------------
+
+    def register_vehicle(self):
+
+        @CliStyle.heading_1
+        def user_stats_message():
+            print(f"Register Vehicle")
+
+        self.vehicles = Db.fetch_user_vehicles(self.user_id)
+
+        # CliComponent.vehicle_registration_menu(user_id)
+        # def get_option():
+        #     option = input("Enter option number: ")
+        # DB FUNCTION FOR WRITING TO DB GOES HERE.
+        # NEEDS TO MATCH OPTION ENTERED WITH VEHICLE ID NUMBER.
+        Db.write_user_vehicle(user_id, vehicle_id)
+
+    # -------------------------------------------------------------------------
+    # Main Menu Option 4 – Log Out
+    # -------------------------------------------------------------------------
 
     def logout(self):
         """Logs a user out of the system and restarts the program."""
@@ -204,37 +266,6 @@ class User:
 
         CliComponent.welcome_banner()
         self.login()
-
-
-    def calculate_user_stats(self):
-        """Fetches data from the database and saves as instance attributes.
-
-        This method runs the database functions that calculate the total
-        number of journeys made by a user, the total CO2e they have emitted on
-        those journeys and the total amount of CO2e they have offset on those
-        journeys by opting to take a transport option that emits a smaller
-        volume of GHGs than their worst registered mode of transport."""
-        self.total_journeys = Db.get_total_user_journeys(self.user_id)
-        self.total_co2_emitted = Db.get_total_co2_emitted(self.user_id)
-        self.total_co2_offset = Db.get_total_co2_saved(self.user_id)
-
-
-    def display_stats(self):
-
-        @CliStyle.heading_1
-        def user_stats_message():
-            print(f"User Statistics for {self.fname} {self.lname}")
-
-        self.calculate_user_stats()
-        CliComponent.display_user_stats(self.total_journeys,
-                                        self.total_co2_emitted,
-                                        self.total_co2_offset)
-        self.main_menu()
-
-
-    # def calculate_journey(self):
-
-    # def register_vehicle(self):
 
 
 def main():
