@@ -22,23 +22,15 @@ class User:
         self.total_co2_emitted = 0
         self.total_co2_offset = 0
 
-    def update_user_id(self, user_id):
-        self.user_id = user_id
-
-    def update_fname(self, fname):
-        self.fname = fname
-
-    def update_lname(self, lname):
-        self.lname = lname
-
     def update_email(self, email):
         self.email = email
 
-    def update_pword(self, pword):
-        self.pword = pword
-
-    def log_in(self):
+    def log_in(self, user_id, fname, lname, pword):
         self.logged_in = True
+        self.user_id = user_id
+        self.fname = fname
+        self.lname = lname
+        self.pword = pword
 
     def log_out(self):
         self.user_id = None
@@ -125,20 +117,18 @@ def main():
     if Db.check_email(email):
         user.update_email(email)
         user_dict = LogInHelpFunc.login_existing_user(email)
-        user.update_user_id(user_dict["user_id"])
-        user.update_fname(user_dict["fname"])  # decide later whether to put these in one
-        user.update_lname(user_dict["lname"])
-        user.update_pword(user_dict["pword"])
-        user.log_in()
+        user.log_in(user_dict["user_id"],
+                    user_dict["fname"],
+                    user_dict["lname"],
+                    user_dict["pword"])
     else:
         print("\nIt looks like you are a new user.")
         user.update_email(email)
         user_dict = LogInHelpFunc.register_new_user(email)
-        user.update_user_id(user_dict["user_id"])
-        user.update_fname(user_dict["fname"])
-        user.update_lname(user_dict["lname"])
-        user.update_pword(user_dict["pword"])
-        user.log_in()
+        user.log_in(user_dict["user_id"],
+                    user_dict["fname"],
+                    user_dict["lname"],
+                    user_dict["pword"])
 
     # Main menu.
     main_menu(user)
