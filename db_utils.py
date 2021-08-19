@@ -35,7 +35,6 @@ class DbQueryFunction:
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
-
             query = f"SELECT email FROM users WHERE email = '{email}'"
             cur.execute(query)
         except Exception:
@@ -55,32 +54,20 @@ class DbQueryFunction:
                 db_connection.close()
 
     @staticmethod
-    def authenticate(check_email, check_password):
+    def authenticate(email, pword):
         try:
-            # calling DB connection
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
-
-            # defining the query
-            query = "SELECT email, pword FROM users"
+            query = f"SELECT email, pword FROM users WHERE email = '{email}'"
             cur.execute(query)
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
         else:
             result = cur.fetchall()
-
-            # converting the tuple query output to dictionary to have Key as email
-            # and value as password
-            user_dict = dict((x, y) for x, y in result)
-
-            # Comparing the email and password in the dictionary to check_email and
-            # check_password
-            for key in user_dict.keys():
-                if key == check_email:
-                    if user_dict[key] == check_password:
-                        return True
-                    else:
-                        return False
+            if pword == result[0][1]:
+                return True
+            else:
+                return False
         finally:
             if db_connection:
                 db_connection.close()
