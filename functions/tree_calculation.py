@@ -4,7 +4,9 @@ colorama.init()
 
 def calc_trees(offset):
     """1 gram of carbon produces 3.67grams of co2
-       1 tree can absorb 21,772.416 grams of co2 in its life time on an avg"""
+       1 tree can absorb 21,772.416 grams of co2 in its life time on an avg
+       :param offset
+       :return %of tree saved """
     co2_prod= 3.67*offset
     Tree_saved=(co2_prod/(21772.416))*100
     Tree_saved=format(Tree_saved,".3f")
