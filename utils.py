@@ -21,7 +21,7 @@ class GeneralFunction:
 # Log In Helper Functions
 # —————————————————————————————————————————————————————————————————————————————
 
-class LogInFunction:
+class LogInHelpFunc:
 
     @staticmethod
     def is_valid_email(email):
@@ -38,12 +38,12 @@ class LogInFunction:
         email = input("Email address: ")
         GeneralFunction.option_to_exit(email)
         try:
-            if not LogInFunction.is_valid_email(email):
+            if not LogInHelpFunc.is_valid_email(email):
                 raise ValueError
         except ValueError:
             print("\nOoops! That doesn't look like an email address.\n"
                   "Please try again.\n")
-            LogInFunction.get_user_email()
+            LogInHelpFunc.get_user_email()
         else:
             return email
 
@@ -58,16 +58,16 @@ class LogInFunction:
                 raise ValueError
         except ValueError:
             print("Incorrect password. Try again.\n")
-            LogInFunction.verify_existing_user_pword(email) # ? check this!!
+            LogInHelpFunc.verify_existing_user_pword(email) # ? check this!!
         else:
             user_dict = Db.fetch_user_details(email)
             return user_dict
 
     def register_new_user(self, email):
         CliComponent.header("New User Registration")
-        fname = LogInFunction.get_new_user_fname()
-        lname = LogInFunction.get_new_user_lname()
-        pword = LogInFunction.get_new_user_pword()
+        fname = LogInHelpFunc.get_new_user_fname()
+        lname = LogInHelpFunc.get_new_user_lname()
+        pword = LogInHelpFunc.get_new_user_pword()
         Db.enter_new_user(fname, lname, email, pword)
         user_id = Db.get_new_user_id(email)
         user_dict = {
@@ -91,7 +91,7 @@ class LogInFunction:
         except ValueError:
             print("First name must be 3–25 characters.\n"
                   "Please try again.\n")
-            LogInFunction.get_new_user_fname()
+            LogInHelpFunc.get_new_user_fname()
         else:
             return fname
 
@@ -105,7 +105,7 @@ class LogInFunction:
         except ValueError:
             print("Last name must be 3–25 characters.\n"
                   "Please try again.\n")
-            LogInFunction.get_new_user_lname()
+            LogInHelpFunc.get_new_user_lname()
         else:
             return lname
 
@@ -119,7 +119,7 @@ class LogInFunction:
         except ValueError:
             print("Password must be 3–20 alphanumeric characters.\n"
                   "Please try again.\n")
-            LogInFunction.get_new_user_pword()
+            LogInHelpFunc.get_new_user_pword()
         else:
             return pword
 

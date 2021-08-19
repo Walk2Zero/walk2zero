@@ -1,7 +1,7 @@
 import requests  # for google maps api
 from cli_components import CliComponent
 from db_utils import DbQueryFunction as Db
-from utils import LogInFunction, MenuHelpFunc, StatsHelpFunc
+from utils import LogInHelpFunc, MenuHelpFunc, StatsHelpFunc, JourneyHelpFunc
 
 
 # —————————————————————————————————————————————————————————————————————————————
@@ -91,7 +91,10 @@ def main_menu(user_object):
 
     selected_option = MenuHelpFunc.main_menu_select_choice()
     if selected_option == 1:
+        CliComponent.header("Calculate a New Journey")
+
         print("plan journey")
+        main_menu(user)
     elif selected_option == 2:
         CliComponent.header(f"User Statistics for {user.fname} {user.lname}")
         user_stats = StatsHelpFunc.calculate_user_stats(user.user_id)
@@ -99,9 +102,10 @@ def main_menu(user_object):
         main_menu(user)
     elif selected_option == 3:
         print("reg vehicle")
+        main_menu(user)
     elif selected_option == 4:
         user.log_out()
-        main()
+        return main()  # BUG: does not rerun main if it the first time the program is running
 
 
 # —————————————————————————————————————————————————————————————————————————————
@@ -117,10 +121,10 @@ def main():
     user = User()
 
     # Log In.
-    email = LogInFunction.get_user_email()
+    email = LogInHelpFunc.get_user_email()
     if Db.check_email(email):
         user.update_email(email)
-        user_dict = LogInFunction.login_existing_user(email)
+        user_dict = LogInHelpFunc.login_existing_user(email)
         user.update_user_id(user_dict["user_id"])
         user.update_fname(user_dict["fname"])  # decide later whether to put these in one
         user.update_lname(user_dict["lname"])
@@ -129,7 +133,7 @@ def main():
     else:
         print("\nIt looks like you are a new user.")
         user.update_email(email)
-        user_dict = LogInFunction.register_new_user(email)
+        user_dict = LogInHelpFunc.register_new_user(email)
         user.update_user_id(user_dict["user_id"])
         user.update_fname(user_dict["fname"])
         user.update_lname(user_dict["lname"])
@@ -142,3 +146,7 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+
+
+

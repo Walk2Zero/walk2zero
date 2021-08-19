@@ -127,6 +127,7 @@ class DbQueryFunction:
             raise DbConnectionError("Failed to read data from DB")
         else:
             result = cur.fetchall()
+            print(result)
             return result
         finally:
             if db_connection:
