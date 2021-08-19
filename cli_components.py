@@ -56,17 +56,21 @@ class CliComponent:
               "    (3) register a vehicle\n"
               "    (4) log out\n")
 
+
     @staticmethod
-    def display_user_stats(total_journeys, total_co2_emitted, total_co2_offset):
+    def display_user_stats(user_stats_dict):
         """Displays the user's statistics.
 
         This method prints the total carbon emitted and the total carbon
         offset by all journeys made by a user alongside some of their other
         key statistics.
         """
-        print(f"Journeys made: {total_journeys}\n"
-              f"CO2e emitted by all journeys: {total_co2_emitted}\n"
-              f"CO2e offset by walking to zero: {total_co2_offset}\n")
+        print(f"Journeys made: "
+              f"{user_stats_dict['total_journeys']}\n"
+              f"CO2e emitted by all journeys: "
+              f"{user_stats_dict['total_co2_emitted']}\n"
+              f"CO2e offset by walking to zero: "
+              f"{user_stats_dict['total_co2_offset']}\n")
 
 
     # @staticmethod
