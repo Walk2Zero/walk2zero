@@ -2,19 +2,38 @@ import colorama
 from colorama import Fore
 colorama.init()
 
-def calc_trees(offset):
-    """1 gram of carbon produces 3.67grams of co2
-       1 tree can absorb 21,772.416 grams of co2 in its life time on an avg
-       :param offset
-       :return %of tree saved """
-    co2_prod= 3.67*offset
-    Tree_saved=(co2_prod/(21772.416))*100
-    Tree_saved=format(Tree_saved,".3f")
-    print(Fore.GREEN+"YAY!! YOU HAVE SAVED "+ str(Tree_saved)+"% of a typical tree WITH THIS JOURNEY")
-    return Tree_saved
-calc_trees(100.00)
+def carbon_to_trees(carbon_offset):
+    """
+    Function to calculate offset and return the number of trees being planted the offset amounted to
+    :param carbon_offset
+    :return number of tree saved
+    """
+    carbon_to_co2_multiplier = 44/12 # atomic weights of CO2/C
+    co2_offset = carbon_to_co2_multiplier * carbon_offset
 
-calc_trees(87.67)
+    tree_co2_absorbed = 21772.416 # 1 tree can absorb 21,772.416 grams of CO2
+    num_of_trees = co2_offset / tree_co2_absorbed
+
+    trees = ''
+
+    if num_of_trees < 1:
+        trees = str(format(num_of_trees * 100, ".2f") + '% of a tree')
+    elif num_of_trees == 1:
+        trees = '1 tree'
+    else:
+        trees = f'{int(num_of_trees)} trees'
+
+    print(Fore.GREEN
+          + "Your carbon offset amounted to "
+          + trees +
+          " being planted 🌳🌳🌳 Good job!")
+
+    return trees
+
+
+carbon_to_trees(870)
+
+carbon_to_trees(87000)
 
 
 
