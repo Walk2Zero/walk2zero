@@ -38,6 +38,9 @@ class DbQueryFunction:
 
             query = f"SELECT email FROM users WHERE email = '{email}'"
             cur.execute(query)
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+        else:
             result = cur.fetchall()
             # email found     -> returns [('ewillams@gemail.com',)]
             # email not found -> returns []
@@ -47,10 +50,6 @@ class DbQueryFunction:
                     return True
             except IndexError:  # if email not found, getting index [0][0] of
                 return False    # empty list would through IndexError
-
-        except Exception:
-            raise DbConnectionError("Failed to read data from DB")
-
         finally:
             if db_connection:
                 db_connection.close()
@@ -65,6 +64,9 @@ class DbQueryFunction:
             # defining the query
             query = "SELECT email, pword FROM users"
             cur.execute(query)
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+        else:
             result = cur.fetchall()
 
             # converting the tuple query output to dictionary to have Key as email
@@ -79,10 +81,6 @@ class DbQueryFunction:
                         return True
                     else:
                         return False
-
-        except Exception:
-            raise DbConnectionError("Failed to read data from DB")
-
         finally:
             if db_connection:
                 db_connection.close()
@@ -93,22 +91,22 @@ class DbQueryFunction:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
             query = f"""
-                    SELECT user_id, fname, lname
+                    SELECT user_id, fname, lname, pword
                     FROM users 
                     WHERE email = '{email}'
                     """
             cur.execute(query)
-            result = cur.fetchall()  # example output [(2, 'Owen', 'Parry')]
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+        else:
+            result = cur.fetchall()  # example output [(1, 'Elen', 'Williams', 'ewill95')]
             user_dict = {
                 "user_id": result[0][0],
                 "fname": result[0][1],
-                "lname": result[0][2]
+                "lname": result[0][2],
+                "pword": result[0][3]
             }
-            return user_dict
-
-        except Exception:
-            raise DbConnectionError("Failed to read data from DB")
-
+            return user_dict  # example output {'user_id': 1, 'fname': 'Elen', 'lname': 'Williams', 'pword': 'ewill95'}
         finally:
             if db_connection:
                 db_connection.close()
@@ -123,11 +121,10 @@ class DbQueryFunction:
                     VALUES ('{fname}', '{lname}', '{email}', '{pword}')
                     """
             cur.execute(query)
-            db_connection.commit()
-
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
-
+        else:
+            db_connection.commit()
         finally:
             if db_connection:
                 db_connection.close()
@@ -139,12 +136,11 @@ class DbQueryFunction:
             cur = db_connection.cursor()
             query = f"SELECT user_id FROM users WHERE email = '{email}'"
             cur.execute(query)
-            result = cur.fetchall()
-            return result
-
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
-
+        else:
+            result = cur.fetchall()
+            return result
         finally:
             if db_connection:
                 db_connection.close()
@@ -160,13 +156,12 @@ class DbQueryFunction:
                     WHERE user_id = '{user_id}'
                     """
             cur.execute(query)
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+        else:
             result = cur.fetchall()
             total_user_journeys = result[0][0]
             return total_user_journeys
-
-        except Exception:
-            raise DbConnectionError("Failed to read data from DB")
-
         finally:
             if db_connection:
                 db_connection.close()
@@ -182,13 +177,12 @@ class DbQueryFunction:
                     WHERE user_id = '{user_id}'
                     """
             cur.execute(query)
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+        else:
             result = cur.fetchall()
             total_co2_emitted = result[0][0]
             return total_co2_emitted
-
-        except Exception:
-            raise DbConnectionError("Failed to read data from DB")
-
         finally:
             if db_connection:
                 db_connection.close()
@@ -204,13 +198,12 @@ class DbQueryFunction:
                     WHERE user_id = '{user_id}'
                     """
             cur.execute(query)
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+        else:
             result = cur.fetchall()
             total_co2_saved = result[0][0]
             return total_co2_saved
-
-        except Exception:
-            raise DbConnectionError("Failed to read data from DB")
-
         finally:
             if db_connection:
                 db_connection.close()
@@ -222,10 +215,8 @@ class DbQueryFunction:
             cur = db_connection.cursor()
             query = f"SELECT vehicle_id, vehicle_name, carb_emit_km FROM vehicles"
             cur.execute(query)
-
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
-
         else:
             result = cur.fetchall()
             vehicle_list = []
@@ -239,7 +230,6 @@ class DbQueryFunction:
                 vehicle_list.append(vehicle)
 
             return vehicle_list  # [{'vehicle_id': 1, 'vehicle_name': 'foot', 'carb_emit_km': 0}, {'vehicle_id': 2, 'vehicle_name': 'bicycle', 'carb_emit_km': 0}, {'vehicle_id': 3, 'vehicle_name': 'motorbike', 'carb_emit_km': 145}, {'vehicle_id': 4, 'vehicle_name': 'b_car', 'carb_emit_km': 69}, {'vehicle_id': 5, 'vehicle_name': 'ph_car', 'carb_emit_km': 124}, {'vehicle_id': 6, 'vehicle_name': 'petrol_car', 'carb_emit_km': 223}, {'vehicle_id': 7, 'vehicle_name': 'diesel_car', 'carb_emit_km': 209}, {'vehicle_id': 8, 'vehicle_name': 'taxi', 'carb_emit_km': 259}, {'vehicle_id': 9, 'vehicle_name': 'transit', 'carb_emit_km': 127}]
-
         finally:
             if db_connection:
                 db_connection.close()
@@ -258,15 +248,12 @@ class DbQueryFunction:
                         WHERE user_id = '{user_id}')
                     """
             cur.execute(query)
-
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
-
         else:
             result = cur.fetchall()
             user_vehicles = dict(result)  # e.g. {'foot': 0, 'transit': 127}
             return user_vehicles
-
         finally:
             if db_connection:
                 db_connection.close()
@@ -281,11 +268,10 @@ class DbQueryFunction:
                     VALUES ('{user_id}', '{vehicle_id}')
                     """
             cur.execute(query)
-            db_connection.commit()
-
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
-
+        else:
+            db_connection.commit()
         finally:
             if db_connection:
                 db_connection.close()
