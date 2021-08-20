@@ -15,12 +15,6 @@ def offset(proposed_mode, chosen_mode):
     return offset
 
 
-print(offset({'a': 5, 'b': 5, 'c': 15.156, 'd': 100},
-       {'d': 100}))
-
-
-print(offset({'a': 5, 'b': 5, 'c': 15.156, 'd': 100},
-       {'a': 5}))
 
 
 
