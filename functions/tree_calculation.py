@@ -21,7 +21,7 @@ def carbon_to_trees(carbon_offset):
     elif num_of_trees == 1:
         trees = '1 tree'
     else:
-        trees = f'{int(num_of_trees)} trees'
+        trees = '{} trees'.format(int(num_of_trees))
 
     print(Fore.GREEN
           + "Your carbon offset amounted to "
