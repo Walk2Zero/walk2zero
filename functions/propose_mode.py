@@ -1,8 +1,3 @@
-short_distances = {'driving': '4.7 km', 'walking': '4.0 km', 'bicycling': '5.6 km', 'transit': '5.2 km'}
-long_distances = {'driving': '4.7 km', 'walking': '7.0 km', 'bicycling': '5.6 km', 'transit': '5.2 km'}
-super_distances = {'driving': '2,205 km', 'walking': '2,188 km', 'bicycling': '2,296 km', 'transit': '2,543 km'}
-
-
 def str_to_float(distances):
     """
     Function to change the string distances in in the dictionary distances from the API and changes them into floats
@@ -33,7 +28,3 @@ def propose_modes(distances):
 
     return distances
 
-
-print(propose_modes(short_distances))
-print(propose_modes(long_distances))
-print(propose_modes(super_distances))
