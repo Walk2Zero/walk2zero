@@ -207,8 +207,8 @@ class DbQueryFunction:
             raise DbConnectionError("Failed to read data from DB")
         else:
             result = cur.fetchall()
-            vehicle_list = []
-
+            #vehicle_list = []
+            """"
             for i in result:
                 vehicle = {
                     "vehicle_id": i[0],
@@ -216,8 +216,8 @@ class DbQueryFunction:
                     "carb_emit_km": i[2]
                 }
                 vehicle_list.append(vehicle)
-
-            return vehicle_list  # [{'vehicle_id': 1, 'vehicle_name': 'foot', 'carb_emit_km': 0}, {'vehicle_id': 2, 'vehicle_name': 'bicycle', 'carb_emit_km': 0}, {'vehicle_id': 3, 'vehicle_name': 'motorbike', 'carb_emit_km': 145}, {'vehicle_id': 4, 'vehicle_name': 'b_car', 'carb_emit_km': 69}, {'vehicle_id': 5, 'vehicle_name': 'ph_car', 'carb_emit_km': 124}, {'vehicle_id': 6, 'vehicle_name': 'petrol_car', 'carb_emit_km': 223}, {'vehicle_id': 7, 'vehicle_name': 'diesel_car', 'carb_emit_km': 209}, {'vehicle_id': 8, 'vehicle_name': 'taxi', 'carb_emit_km': 259}, {'vehicle_id': 9, 'vehicle_name': 'transit', 'carb_emit_km': 127}]
+            """
+            return result  # [{'vehicle_id': 1, 'vehicle_name': 'foot', 'carb_emit_km': 0}, {'vehicle_id': 2, 'vehicle_name': 'bicycle', 'carb_emit_km': 0}, {'vehicle_id': 3, 'vehicle_name': 'motorbike', 'carb_emit_km': 145}, {'vehicle_id': 4, 'vehicle_name': 'b_car', 'carb_emit_km': 69}, {'vehicle_id': 5, 'vehicle_name': 'ph_car', 'carb_emit_km': 124}, {'vehicle_id': 6, 'vehicle_name': 'petrol_car', 'carb_emit_km': 223}, {'vehicle_id': 7, 'vehicle_name': 'diesel_car', 'carb_emit_km': 209}, {'vehicle_id': 8, 'vehicle_name': 'taxi', 'carb_emit_km': 259}, {'vehicle_id': 9, 'vehicle_name': 'transit', 'carb_emit_km': 127}]
         finally:
             if db_connection:
                 db_connection.close()
@@ -240,8 +240,8 @@ class DbQueryFunction:
             raise DbConnectionError("Failed to read data from DB")
         else:
             result = cur.fetchall()
-            user_vehicles = dict(result)  # e.g. {'foot': 0, 'transit': 127}
-            return user_vehicles
+            #user_vehicles = dict(result)  # e.g. {'foot': 0, 'transit': 127}
+            return result
         finally:
             if db_connection:
                 db_connection.close()
