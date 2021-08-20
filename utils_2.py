@@ -279,10 +279,8 @@ class journey_functions:
 
     @staticmethod
     def get_selection(distances, user_id):
-        distances = Propose_A_Mode.api_propose_modes(distances)
         options_df = Propose_A_Mode.proposed_options(distances, user_id)
-        print(distances)
-        print(options_df)
+        # print(options_df)
 
         vehicle_id, carbon_emitted, carbon_saved, distance = 0, 0, 0, 0
         return vehicle_id, carbon_emitted, carbon_saved, distance

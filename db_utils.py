@@ -227,14 +227,10 @@ class DbQueryFunction:
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
-            query = f"""
-                    SELECT v.vehicle_name, v.carb_emit_km
-                    FROM vehicles AS v
-                    WHERE v.vehicle_id IN (
-                        SELECT uv.vehicle_id
+            query = f"""SELECT uv.user_id, uv.vehicle_id
                         FROM user_vehicles AS uv
-                        WHERE user_id = '{user_id}')
-                    """
+                        WHERE user_id = {user_id};
+                        """
             cur.execute(query)
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
