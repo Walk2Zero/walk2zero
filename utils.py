@@ -63,7 +63,8 @@ class LogInHelpFunc:
             user_dict = Db.fetch_user_details(email)
             return user_dict
 
-    def register_new_user(self, email):
+    @staticmethod
+    def register_new_user(email):
         CliComponent.header("New User Registration")
         fname = LogInHelpFunc.get_new_user_fname()
         lname = LogInHelpFunc.get_new_user_lname()
