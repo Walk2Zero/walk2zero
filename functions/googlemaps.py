@@ -25,7 +25,7 @@ def get_distance(origin, destination):
     :type destination: string
     :return: origin address, destination address and distances & durations of route for each mode of transport.
     """
-    api_key = "Your API key here"
+    api_key = "AIzaSyATutmnPcuGNLy1JwV2FMksls1Q561WP9o"
     modes = ["driving", "walking", "bicycling", "transit"]
     distances = dict()
     durations = dict()
@@ -39,8 +39,8 @@ def get_distance(origin, destination):
         response = requests.get(uri)
         output = response.json()
 
-        origin_address = output['origin_addresses']
-        destination_address = output['destination_addresses']
+        origin_address = output['origin_addresses'][0]
+        destination_address = output['destination_addresses'][0]
 
         for obj in output['rows']:
             for data in obj['elements']:
