@@ -227,10 +227,7 @@ class DbQueryFunction:
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
-            query = f"""SELECT uv.user_id, uv.vehicle_id
-                        FROM user_vehicles AS uv
-                        WHERE user_id = {user_id};
-                        """
+            query = f"SELECT uv.user_id, uv.vehicle_id FROM user_vehicles AS uv WHERE user_id = {user_id};"
             cur.execute(query)
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
@@ -256,6 +253,58 @@ class DbQueryFunction:
             raise DbConnectionError("Failed to write data from DB")
         else:
             db_connection.commit()
+        finally:
+            if db_connection:
+                db_connection.close()
+
+    @staticmethod
+    def write_journey(user_id, journey_id, j_datetime, origin, destination, distance, vehicle_id):
+        try:
+            db_connection = DbConnection.connect_to_db()
+            cur = db_connection.cursor()
+            query = f"""
+                    INSERT INTO journeys (user_id, journey_id, j_datetime, origin, destination, distance, vehicle_id) 
+                    VALUES ({user_id}, {journey_id}, '{j_datetime}', '{origin}', '{destination}', {distance}, {vehicle_id})
+                    """
+            cur.execute(query)
+        except Exception:
+            raise DbConnectionError("Failed to write data from DB")
+        else:
+            db_connection.commit()
+        finally:
+            if db_connection:
+                db_connection.close()
+
+    @staticmethod
+    def write_journey_emissions(user_id, journey_id, carbon_emitted, carbon_saved):
+        try:
+            db_connection = DbConnection.connect_to_db()
+            cur = db_connection.cursor()
+            query = f"""
+                        INSERT INTO emissions (user_id, journey_id, carbon_emitted, carbon_saved) 
+                        VALUES ({user_id}, {journey_id}, {carbon_emitted}, {carbon_saved})
+                        """
+            cur.execute(query)
+        except Exception:
+            raise DbConnectionError("Failed to write data from DB")
+        else:
+            db_connection.commit()
+        finally:
+            if db_connection:
+                db_connection.close()
+
+    @staticmethod
+    def get_new_journey_id(user_id):
+        try:
+            db_connection = DbConnection.connect_to_db()
+            cur = db_connection.cursor()
+            query = f"SELECT max(journey_id) FROM journeys WHERE user_id = {user_id}"
+            cur.execute(query)
+        except Exception:
+            raise DbConnectionError("Failed to read data from DB")
+        else:
+            result = cur.fetchall()
+            return result[0][0]
         finally:
             if db_connection:
                 db_connection.close()

@@ -67,9 +67,10 @@ class Propose_A_Mode:
         api_options = pd.DataFrame(list(api_return.items()),
                                    columns=['API choices', 'distance'])  # converting dict to df
         useroptions_df = Propose_A_Mode.potential_options(user_id)
-        Proposed_Options = pd.merge(useroptions_df, api_options, on='API choices', how='left')
+        Proposed_Options = pd.merge(useroptions_df, api_options, on='API choices', how='right')
         # Calculating emissions based on the distance
         Proposed_Options['Total Emissions'] = Proposed_Options['e_value'] * Proposed_Options['distance']
+        Proposed_Options = Proposed_Options.dropna()
         # returning the df of proposed options as we need to push distance in to SQL DB.
         return Proposed_Options[['v_id', 'v_name', 'distance', 'Total Emissions']]
 
@@ -151,6 +152,23 @@ class GeneralHelperFunc:
             value = value.replace(',', '')
             distances[key] = float(value[:-3])
         return distances
+
+    @staticmethod
+    def user_mode_selection(proposed_options):
+        print("\nPlease select a v_id of your desired transport mode from the following options:\n")
+        print(proposed_options[['v_id', 'v_name', 'distance', 'Total Emissions']])
+        choice = int(input("\nYour v_id selection: "))
+        try:
+            if choice in ['q', 'Q']:
+                raise SystemExit
+        except SystemExit:
+            CliComponent.thank_you()
+        chosen_mode = proposed_options.loc[proposed_options['v_id'] == choice]
+        if chosen_mode.empty:
+            print("Please enter a valid option from the v_id.")
+            return GeneralHelperFunc.user_mode_selection(proposed_options)
+        else:
+            return chosen_mode
 
 
 # —————————————————————————————————————————————————————————————————————————————
@@ -280,7 +298,14 @@ class journey_functions:
     @staticmethod
     def get_selection(distances, user_id):
         options_df = Propose_A_Mode.proposed_options(distances, user_id)
-        # print(options_df)
+        user_choice = GeneralHelperFunc.user_mode_selection(options_df)
+        choice_dict = user_choice.to_dict(orient='records')[0]
+        vehicle_id = choice_dict['v_id']
+        carbon_emitted = choice_dict['Total Emissions']
+        distance = choice_dict['distance']
 
-        vehicle_id, carbon_emitted, carbon_saved, distance = 0, 0, 0, 0
+        options_emissions = options_df["Total Emissions"]
+        max_emissions = options_emissions.max()
+        carbon_saved = max_emissions - choice_dict['Total Emissions']
+
         return vehicle_id, carbon_emitted, carbon_saved, distance

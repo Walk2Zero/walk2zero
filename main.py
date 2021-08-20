@@ -64,6 +64,7 @@ class Journey:
 
     def __init__(self, user_id):
         self.user_id = user_id
+        self.journey_id = None
         self.j_datetime = None
         self.origin = None
         self.destination = None
@@ -86,6 +87,12 @@ class Journey:
         self.carbon_saved = carbon_saved
         self.distance = distance
 
+    def get_journey_id(self, journey_id):
+        j_id = Db.get_new_journey_id(self.user_id)
+        if j_id is None:
+            self.journey_id = 1
+        else:
+            self.journey_id = j_id + 1
 
 
 
@@ -107,10 +114,14 @@ def main_menu(user_object):
         CliComponent.header("Calculate a New Journey")
         journey = Journey(user.user_id)
         journey.get_date()
+        journey.get_journey_id(journey.user_id)
         origin, destination, distances = journey_functions.output_locations()
         journey.get_locations(origin, destination)
         vehicle_id, carbon_emitted, carbon_saved, distance = journey_functions.get_selection(distances, journey.user_id)
         journey.get_journey_emissions(vehicle_id, carbon_emitted, carbon_saved, distance)
+        Db.write_journey(journey.user_id, journey.journey_id, journey.j_datetime, journey.origin, journey.destination,
+                         journey.distance, journey.vehicle_id)
+        Db.write_journey_emissions(journey.user_id, journey.journey_id, journey.carbon_emitted, journey.carbon_saved)
         main_menu(user)
     elif selected_option == 2:
         CliComponent.header(f"User Statistics for {user.fname} {user.lname}")
