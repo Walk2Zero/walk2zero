@@ -155,7 +155,7 @@ SELECT * FROM emissions;
 INSERT INTO users
 (fname, lname, email, pword)
 VALUES
-('Elen', 'Williams', 'ewillams@gemail.com', 'ewill95'),
+('Elen', 'Williams', 'ewilliams@gemail.com', 'ewill95'),
 ('Owen', 'Parry', 'oparry@gemail.com', 'mybadpassword');
 
 INSERT INTO user_vehicles
