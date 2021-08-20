@@ -39,8 +39,8 @@ def get_distance(origin, destination):
         response = requests.get(uri)
         output = response.json()
 
-        origin_address = output['origin_addresses']
-        destination_address = output['destination_addresses']
+        origin_address = output['origin_addresses'][0]
+        destination_address = output['destination_addresses'][0]
 
         for obj in output['rows']:
             for data in obj['elements']:

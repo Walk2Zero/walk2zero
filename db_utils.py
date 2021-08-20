@@ -253,11 +253,11 @@ class DbQueryFunction:
             cur = db_connection.cursor()
             query = f"""
                     INSERT INTO user_vehicles (user_id, vehicle_id) 
-                    VALUES ('{user_id}', '{vehicle_id}')
+                    VALUES ({user_id}, {vehicle_id})
                     """
             cur.execute(query)
         except Exception:
-            raise DbConnectionError("Failed to read data from DB")
+            raise DbConnectionError("Failed to write data from DB")
         else:
             db_connection.commit()
         finally:

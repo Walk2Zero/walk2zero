@@ -1,7 +1,8 @@
-import requests  # for google maps api
 from cli_components import CliComponent
+from datetime import datetime
 from db_utils import DbQueryFunction as Db
 from utils import LogInHelpFunc, MenuHelpFunc, StatsHelpFunc, JourneyHelpFunc
+from utils_2 import VehicleReg, journey_functions
 
 
 # —————————————————————————————————————————————————————————————————————————————
@@ -63,13 +64,33 @@ class Journey:
 
     def __init__(self, user_id):
         self.user_id = user_id
-        self.journey_id = None
         self.j_datetime = None
         self.origin = None
         self.destination = None
         self.distance = None
         self.vehicle_id = None
-        self.distances = None
+        self.carbon_emitted = None
+        self.carbon_saved = None
+
+    def get_locations(self, origin, destination):
+        self.origin = origin
+        self.destination = destination
+
+    def get_date(self):
+        now = datetime.now()
+        self.j_datetime = now.strftime('%Y-%m-%d %H:%M:%S')
+
+    def get_journey_emissions(self, vehicle_id, carbon_emitted, carbon_saved, distance):
+        self.vehicle_id = vehicle_id
+        self.carbon_emitted = carbon_emitted
+        self.carbon_saved = carbon_saved
+        self.distance = distance
+
+
+
+
+
+
 
 
 # —————————————————————————————————————————————————————————————————————————————
@@ -84,8 +105,12 @@ def main_menu(user_object):
     selected_option = MenuHelpFunc.main_menu_select_choice()
     if selected_option == 1:
         CliComponent.header("Calculate a New Journey")
-
-        print("plan journey")
+        journey = Journey(user.user_id)
+        journey.get_date()
+        origin, destination, distances = journey_functions.output_locations()
+        journey.get_locations(origin, destination)
+        vehicle_id, carbon_emitted, carbon_saved, distance = journey_functions.get_selection(distances, journey.user_id)
+        journey.get_journey_emissions(vehicle_id, carbon_emitted, carbon_saved, distance)
         main_menu(user)
     elif selected_option == 2:
         CliComponent.header(f"User Statistics for {user.fname} {user.lname}")
@@ -129,6 +154,9 @@ def main():
                     user_dict["fname"],
                     user_dict["lname"],
                     user_dict["pword"])
+
+        VehicleReg.vehicle_reg(user_dict["user_id"][0][0])
+
 
     # Main menu.
     main_menu(user)
