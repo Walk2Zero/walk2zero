@@ -3,6 +3,9 @@ import numpy as np
 import requests
 from cli_components import CliComponent, CliStyle
 from db_utils import DbQueryFunction as Db
+import colorama
+from colorama import Fore,Style
+colorama.init()
 
 
 # —————————————————————————————————————————————————————————————————————————————
@@ -31,14 +34,14 @@ class Propose_A_Mode:
         in the DB
         """
         all_vehicles = Db.fetch_all_vehicles()
-        df = pd.DataFrame(all_vehicles, columns=['v_id', 'v_name', 'e_value'])  # list of tuples to df conversion
+        df = pd.DataFrame(all_vehicles, columns=['Vehicle ID', 'Vehicle Name', 'Carbon Emitted'])  # list of tuples to df conversion
         # creating a list of conditions to match all_vehicles to API choices
         conditions = [
-            (df['v_name'] == 'foot'),
-            (df['v_name'] == 'bicycle'),
-            (df['v_name'] == 'motorbike') | (df['v_name'] == 'b_car') | (df['v_name'] == 'ph_car') | (
-                    df['v_name'] == 'petrol_car') | (df['v_name'] == 'diesel_car') | (df['v_name'] == 'taxi'),
-            (df['v_name'] == 'transit')
+            (df['Vehicle Name'] == 'foot'),
+            (df['Vehicle Name'] == 'bicycle'),
+            (df['Vehicle Name'] == 'motorbike') | (df['Vehicle Name'] == 'b_car') | (df['Vehicle Name'] == 'ph_car') | (
+                    df['Vehicle Name'] == 'petrol_car') | (df['Vehicle Name'] == 'diesel_car') | (df['Vehicle Name'] == 'taxi'),
+            (df['Vehicle Name'] == 'transit')
         ]
         values = ['walking', 'bicycling', 'driving', 'transit']  # All API return choices
         # create a new column and use np.select to assign values
@@ -52,9 +55,9 @@ class Propose_A_Mode:
         At this point, the function does not take into consideration the distance aspect.
         """
         user_vehicles = Db.fetch_user_vehicles(user_id)
-        df_uv = pd.DataFrame(user_vehicles, columns=['user_id', 'v_id'])  # Converting list of tuples to df
+        df_uv = pd.DataFrame(user_vehicles, columns=['User ID', 'Vehicle ID'])  # Converting list of tuples to df
         API_DB_df = Propose_A_Mode.API_DB_map()
-        useroptions_df = pd.merge(API_DB_df, df_uv, on='v_id', how='right')
+        useroptions_df = pd.merge(API_DB_df, df_uv, on='Vehicle ID', how='right')
         return useroptions_df
 
     @staticmethod
@@ -65,14 +68,14 @@ class Propose_A_Mode:
         """
         api_return = Propose_A_Mode.api_propose_modes(distances)
         api_options = pd.DataFrame(list(api_return.items()),
-                                   columns=['API choices', 'distance'])  # converting dict to df
+                                   columns=['API choices', 'Distance'])  # converting dict to df
         useroptions_df = Propose_A_Mode.potential_options(user_id)
         Proposed_Options = pd.merge(useroptions_df, api_options, on='API choices', how='right')
         # Calculating emissions based on the distance
-        Proposed_Options['Total Emissions'] = Proposed_Options['e_value'] * Proposed_Options['distance']
+        Proposed_Options['Total Emissions'] = Proposed_Options['Carbon Emitted'] * Proposed_Options['Distance']
         Proposed_Options = Proposed_Options.dropna()
         # returning the df of proposed options as we need to push distance in to SQL DB.
-        return Proposed_Options[['v_id', 'v_name', 'distance', 'Total Emissions']]
+        return Proposed_Options[['Vehicle ID', 'Vehicle Name', 'Distance', 'Total Emissions']]
 
 
 # —————————————————————————————————————————————————————————————————————————————
@@ -94,7 +97,7 @@ class VehicleReg:
         def user_input():
             try:
                 choices = [int(choices) for choices in
-                           input("Enter the v_id of all the vehicles you wish to register(e.g. 1,2): ").split(",")]
+                           input("Enter the Vehicle ID of all the vehicles you wish to register(e.g. 1,2): ").split(",")]
                 if all(x in vehicle_ids for x in choices):
                     print("Valid Selection!")
                 else:
@@ -155,17 +158,17 @@ class GeneralHelperFunc:
 
     @staticmethod
     def user_mode_selection(proposed_options):
-        print("\nPlease select a v_id of your desired transport mode from the following options:\n")
-        print(proposed_options[['v_id', 'v_name', 'distance', 'Total Emissions']])
-        choice = int(input("\nYour v_id selection: "))
+        print("\nPlease select a Vehicle ID of your desired transport mode from the following options:\n")
+        print(proposed_options[['Vehicle ID', 'Vehicle Name', 'Distance', 'Total Emissions']])
+        choice = int(input("\nYour Vehicle ID selection: "))
         try:
             if choice in ['q', 'Q']:
                 raise SystemExit
         except SystemExit:
             CliComponent.thank_you()
-        chosen_mode = proposed_options.loc[proposed_options['v_id'] == choice]
+        chosen_mode = proposed_options.loc[proposed_options['Vehicle ID'] == choice]
         if chosen_mode.empty:
-            print("Please enter a valid option from the v_id.")
+            print("Please enter a valid option from the Vehicle ID.")
             return GeneralHelperFunc.user_mode_selection(proposed_options)
         else:
             return chosen_mode
@@ -213,7 +216,7 @@ class google_maps_api:
         :type destination: string
         :return: origin address, destination address and distances & durations of route for each mode of transport.
         """
-        api_key = "API key"
+        api_key = "AIzaSyATutmnPcuGNLy1JwV2FMksls1Q561WP9o"
         modes = ["driving", "walking", "bicycling", "transit"]
         distances = dict()
 
@@ -273,7 +276,7 @@ class google_maps_api:
 
         except ValueError:
             print("Ooops, try again.")
-            google_maps_api.check_address()
+            google_maps_api.check_address(origin, destination, distances)
 
         return origin, destination, distances
 
@@ -300,12 +303,51 @@ class journey_functions:
         options_df = Propose_A_Mode.proposed_options(distances, user_id)
         user_choice = GeneralHelperFunc.user_mode_selection(options_df)
         choice_dict = user_choice.to_dict(orient='records')[0]
-        vehicle_id = choice_dict['v_id']
+        vehicle_id = choice_dict['Vehicle ID']
         carbon_emitted = choice_dict['Total Emissions']
-        distance = choice_dict['distance']
+        distance = choice_dict['Distance']
 
         options_emissions = options_df["Total Emissions"]
         max_emissions = options_emissions.max()
         carbon_saved = max_emissions - choice_dict['Total Emissions']
 
         return vehicle_id, carbon_emitted, carbon_saved, distance
+
+# —————————————————————————————————————————————————————————————————————————————
+# Carbon to Trees Function
+# —————————————————————————————————————————————————————————————————————————————
+
+class trees_calculator:
+
+    @staticmethod
+    def carbon_to_trees(carbon_offset):
+        """
+        Function to calculate offset and return the number of trees being planted the offset amounted to
+        :param carbon_offset
+        :return number of tree saved
+        """
+        carbon_to_co2_multiplier = 44/12 # atomic weights of CO2/C
+        co2_offset = carbon_to_co2_multiplier * carbon_offset
+
+        tree_co2_absorbed = 21772.416 # 1 tree can absorb 21,772.416 grams of CO2
+        num_of_trees = co2_offset / tree_co2_absorbed
+
+        trees = ''
+
+        if num_of_trees < 1:
+            trees = str(format(num_of_trees * 100, ".2f") + '% of a tree')
+        elif num_of_trees == 1:
+            trees = '1 tree'
+        else:
+            trees = '{} trees'.format(int(num_of_trees))
+        
+        if trees != 0:
+            print(Fore.GREEN
+                + "Your carbon offset amounted to "
+                + trees +
+                " being planted 🌳🌳🌳 Good job!")
+            print('\033[39m')
+
+        #return trees
+    
+
