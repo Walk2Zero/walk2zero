@@ -4,8 +4,8 @@ This script creates a connection to the walk2zero database. It also contains
 all of the functions that query the database. These are within the
 DbQueryFunction class.
 """
-
 import mysql.connector as mysql
+
 from config import USER, PASSWORD, HOST
 
 
@@ -43,7 +43,6 @@ class DbQueryFunction:
             result = cur.fetchall()
             # email found     -> returns [('ewillams@gemail.com',)]
             # email not found -> returns []
-
             try:
                 if result[0][0] == email:
                     return True
@@ -93,7 +92,11 @@ class DbQueryFunction:
                 "lname": result[0][2],
                 "pword": result[0][3]
             }
-            return user_dict  # example output {'user_id': 1, 'fname': 'Elen', 'lname': 'Williams', 'pword': 'ewill95'}
+            return user_dict
+            # example output {'user_id': 1,
+            #                 'fname': 'Elen',
+            #                 'lname': 'Williams',
+            #                 'pword': 'ewill95'}
         finally:
             if db_connection:
                 db_connection.close()
@@ -190,7 +193,7 @@ class DbQueryFunction:
         else:
             result = cur.fetchall()
             total_co2_saved = result[0][0]
-            return total_co2_saved
+            return total_co2_saved[0][0]
         finally:
             if db_connection:
                 db_connection.close()
@@ -200,23 +203,40 @@ class DbQueryFunction:
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
-            query = f"SELECT vehicle_id, vehicle_name, carb_emit_km FROM vehicles"
+            query = """
+                    SELECT vehicle_id, vehicle_name, carb_emit_km 
+                    FROM vehicles
+                    """
             cur.execute(query)
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
         else:
             result = cur.fetchall()
-            #vehicle_list = []
-            """"
-            for i in result:
-                vehicle = {
-                    "vehicle_id": i[0],
-                    "vehicle_name": i[1],
-                    "carb_emit_km": i[2]
-                }
-                vehicle_list.append(vehicle)
-            """
-            return result  # [{'vehicle_id': 1, 'vehicle_name': 'foot', 'carb_emit_km': 0}, {'vehicle_id': 2, 'vehicle_name': 'bicycle', 'carb_emit_km': 0}, {'vehicle_id': 3, 'vehicle_name': 'motorbike', 'carb_emit_km': 145}, {'vehicle_id': 4, 'vehicle_name': 'b_car', 'carb_emit_km': 69}, {'vehicle_id': 5, 'vehicle_name': 'ph_car', 'carb_emit_km': 124}, {'vehicle_id': 6, 'vehicle_name': 'petrol_car', 'carb_emit_km': 223}, {'vehicle_id': 7, 'vehicle_name': 'diesel_car', 'carb_emit_km': 209}, {'vehicle_id': 8, 'vehicle_name': 'taxi', 'carb_emit_km': 259}, {'vehicle_id': 9, 'vehicle_name': 'transit', 'carb_emit_km': 127}]
+            # Robyn's initial idea (remove from notes later):
+            # vehicle_list = []
+            # for i in result:
+            #     vehicle = {
+            #         "vehicle_id": i[0],
+            #         "vehicle_name": i[1],
+            #         "carb_emit_km": i[2]
+            #     }
+            #     vehicle_list.append(vehicle)
+            #
+            # Would have returned:
+            #     [
+            #         {
+            #             'vehicle_id': 1,
+            #              'vehicle_name': 'foot',
+            #              'carb_emit_km': 0
+            #          },
+            #          {
+            #              'vehicle_id': 2,
+            #              'vehicle_name': 'bicycle',
+            #              'carb_emit_km': 0
+            #           }
+            #           etc. ...
+            #     ]
+            return result
         finally:
             if db_connection:
                 db_connection.close()
@@ -226,13 +246,18 @@ class DbQueryFunction:
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
-            query = f"SELECT uv.user_id, uv.vehicle_id FROM user_vehicles AS uv WHERE user_id = {user_id};"
+            query = f"""
+                    SELECT uv.user_id, uv.vehicle_id 
+                    FROM user_vehicles AS uv 
+                    WHERE user_id = {user_id}
+                    """
             cur.execute(query)
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
         else:
             result = cur.fetchall()
-            #user_vehicles = dict(result)  # e.g. {'foot': 0, 'transit': 127}
+            # Initial thoughts (remove from notes later):
+            # user_vehicles = dict(result)  # e.g. {'foot': 0, 'transit': 127}
             return result
         finally:
             if db_connection:
@@ -257,13 +282,18 @@ class DbQueryFunction:
                 db_connection.close()
 
     @staticmethod
-    def write_journey(user_id, journey_id, j_datetime, origin, destination, distance, vehicle_id):
+    def write_journey(user_id, journey_id, j_datetime, origin, destination,
+                      distance, vehicle_id):
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
             query = f"""
-                    INSERT INTO journeys (user_id, journey_id, j_datetime, origin, destination, distance, vehicle_id) 
-                    VALUES ({user_id}, {journey_id}, '{j_datetime}', '{origin}', '{destination}', {distance}, {vehicle_id})
+                    INSERT INTO journeys 
+                    (user_id, journey_id, j_datetime, origin, destination, 
+                    distance, vehicle_id) 
+                    VALUES 
+                    ({user_id}, {journey_id}, '{j_datetime}', '{origin}', 
+                    '{destination}', {distance}, {vehicle_id})
                     """
             cur.execute(query)
         except Exception:
@@ -275,14 +305,17 @@ class DbQueryFunction:
                 db_connection.close()
 
     @staticmethod
-    def write_journey_emissions(user_id, journey_id, carbon_emitted, carbon_saved):
+    def write_journey_emissions(user_id, journey_id, carbon_emitted,
+                                carbon_saved):
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
             query = f"""
-                        INSERT INTO emissions (user_id, journey_id, carbon_emitted, carbon_saved) 
-                        VALUES ({user_id}, {journey_id}, {carbon_emitted}, {carbon_saved})
-                        """
+                    INSERT INTO emissions 
+                    (user_id, journey_id, carbon_emitted, carbon_saved) 
+                    VALUES 
+                    ({user_id}, {journey_id}, {carbon_emitted}, {carbon_saved})
+                    """
             cur.execute(query)
         except Exception:
             raise DbConnectionError("Failed to write data from DB")
@@ -297,13 +330,18 @@ class DbQueryFunction:
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
-            query = f"SELECT max(journey_id) FROM journeys WHERE user_id = {user_id}"
+            query = f"""
+                    SELECT max(journey_id) 
+                    FROM journeys 
+                    WHERE user_id = {user_id}
+                    """
             cur.execute(query)
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
         else:
             result = cur.fetchall()
-            return result[0][0]
+            journey_id = result[0][0]
+            return journey_id
         finally:
             if db_connection:
                 db_connection.close()
