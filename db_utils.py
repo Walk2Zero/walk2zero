@@ -28,7 +28,7 @@ class DbConnection:
         return cnx
 
 
-class DbQueryFunction:
+class DbQuery:
 
     @staticmethod
     def check_email(email):
@@ -46,8 +46,10 @@ class DbQueryFunction:
             try:
                 if result[0][0] == email:
                     return True
-            except IndexError:  # if email not found, getting index [0][0] of
-                return False    # empty list would through IndexError
+            except IndexError:
+                # if email not found, getting index [0][0] of
+                # empty list would through IndexError
+                return False
         finally:
             if db_connection:
                 db_connection.close()
@@ -63,9 +65,12 @@ class DbQueryFunction:
             raise DbConnectionError("Failed to read data from DB")
         else:
             result = cur.fetchall()
-            if pword == result[0][1]:
-                return True
-            else:
+            try:
+                if pword == result[0][1]:
+                    return True
+                else:
+                    return False
+            except IndexError:
                 return False
         finally:
             if db_connection:
@@ -85,7 +90,8 @@ class DbQueryFunction:
         except Exception:
             raise DbConnectionError("Failed to read data from DB")
         else:
-            result = cur.fetchall()  # example output [(1, 'Elen', 'Williams', 'ewill95')]
+            result = cur.fetchall()
+            # example result [(1, 'Elen', 'Williams', 'ewill95')]
             user_dict = {
                 "user_id": result[0][0],
                 "fname": result[0][1],
@@ -151,7 +157,10 @@ class DbQueryFunction:
         else:
             result = cur.fetchall()
             total_user_journeys = result[0][0]
-            return total_user_journeys
+            if total_user_journeys is None:
+                return 0
+            else:
+                return total_user_journeys
         finally:
             if db_connection:
                 db_connection.close()
@@ -172,7 +181,10 @@ class DbQueryFunction:
         else:
             result = cur.fetchall()
             total_co2_emitted = result[0][0]
-            return total_co2_emitted
+            if total_co2_emitted is None:
+                return 0
+            else:
+                return total_co2_emitted
         finally:
             if db_connection:
                 db_connection.close()
@@ -193,7 +205,10 @@ class DbQueryFunction:
         else:
             result = cur.fetchall()
             total_co2_saved = result[0][0]
-            return total_co2_saved[0][0]
+            if total_co2_saved is None:
+                return 0
+            else:
+                return total_co2_saved[0][0]
         finally:
             if db_connection:
                 db_connection.close()
@@ -326,7 +341,22 @@ class DbQueryFunction:
                 db_connection.close()
 
     @staticmethod
-    def get_new_journey_id(user_id):
+    def get_max_journey_id(user_id):
+        """Gets the maximum journey id number for a user.
+
+        This is part of the work around due to MySQL not allowing two
+        auto-increment columns in a table. Each user will have their own
+        journey ids from 1 to n. This function returns the maximum journey id
+        for a user so that Python functions can handle the incrementing
+        rather than MySQL.
+
+        Args:
+            user_id (int): The user's id number.
+
+        Returns:
+            int: The maximum journey id so far recorded for a user in the
+                 journeys table of the DB.
+        """
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -340,8 +370,14 @@ class DbQueryFunction:
             raise DbConnectionError("Failed to read data from DB")
         else:
             result = cur.fetchall()
-            journey_id = result[0][0]
-            return journey_id
+            try:
+                journey_id = result[0][0]
+                return journey_id
+            except IndexError:
+                # If user has not made a journey, result is [] so result[0][0]
+                # will raise this IndexError, in which case we want to return
+                # a value of 0.
+                return 0
         finally:
             if db_connection:
                 db_connection.close()
