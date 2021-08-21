@@ -134,10 +134,10 @@ def main_menu(user_object):
         journey.update_journey_id()
         journey.update_datetime()
         origin, destination, distances = calc_journey.get_journey_data()
+        journey.update_locations(origin, destination)
         vehicle_id, carbon_emitted, carbon_saved, distance = \
             calc_journey.get_selection(distances, journey.user_id)
         journey.update_journey_emissions(vehicle_id, carbon_emitted, carbon_saved, distance)
-
         # Save journey details in DB.
         Db.write_journey(journey.user_id,
                          journey.journey_id,

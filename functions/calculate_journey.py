@@ -38,6 +38,7 @@ def get_journey_data():
     input_origin, input_destination = input_locations()
     precise_origin, precise_destination, distances = get_distance(input_origin,
                                                                   input_destination)
+    print(precise_origin, precise_destination)
     return precise_origin, precise_destination, distances
 
 
@@ -53,7 +54,7 @@ def input_locations():
               "Please try again.\n")
         return input_locations()
 
-    destination = input("Enter your origin location: ")
+    destination = input("Enter your destination location: ")
     menu.option_to_exit(destination)
     try:
         if len(destination) < 2:

@@ -208,7 +208,7 @@ class DbQuery:
             if total_co2_saved is None:
                 return 0
             else:
-                return total_co2_saved[0][0]
+                return total_co2_saved
         finally:
             if db_connection:
                 db_connection.close()

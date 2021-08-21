@@ -1,4 +1,7 @@
+from colorama import Fore
+
 from db_utils import DbQuery as Db
+import colorama
 
 
 def calculate_user_stats(user_id):
