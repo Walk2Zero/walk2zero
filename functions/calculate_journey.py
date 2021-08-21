@@ -83,7 +83,7 @@ def get_distance(origin, destination):
                                    Google Maps.
         distances (dict): Journey distances according to mode of transport.
     """
-    api_key = "API KEY GOES HERE"
+    api_key = "AIzaSyATutmnPcuGNLy1JwV2FMksls1Q561WP9o"
     modes = ["driving", "walking", "bicycling", "transit"]
     distances = dict()
 
@@ -111,10 +111,10 @@ def get_distance(origin, destination):
         precise_destination = destination_address[0]
     except:
         print("Something has gone wrong! \n Try a new/clearer origin and destination.")
-        get_journey_data()
+        return get_journey_data()
 
     if not check_address(precise_origin, precise_destination, distances):
-        get_journey_data()
+        return get_journey_data()
     else:
         return precise_origin, precise_destination, distances
 
