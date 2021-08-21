@@ -2,7 +2,7 @@ from cli_components import CliComponent
 from datetime import datetime
 from db_utils import DbQueryFunction as Db
 from utils import LogInHelpFunc, MenuHelpFunc, StatsHelpFunc, JourneyHelpFunc
-from utils_2 import VehicleReg, journey_functions
+from utils_2 import VehicleReg, journey_functions,trees_calculator
 
 
 # —————————————————————————————————————————————————————————————————————————————
@@ -122,11 +122,13 @@ def main_menu(user_object):
         Db.write_journey(journey.user_id, journey.journey_id, journey.j_datetime, journey.origin, journey.destination,
                          journey.distance, journey.vehicle_id)
         Db.write_journey_emissions(journey.user_id, journey.journey_id, journey.carbon_emitted, journey.carbon_saved)
+        trees_calculator.carbon_to_trees(journey.carbon_saved)
         main_menu(user)
     elif selected_option == 2:
         CliComponent.header(f"User Statistics for {user.fname} {user.lname}")
         user_stats = StatsHelpFunc.calculate_user_stats(user.user_id)
         CliComponent.display_user_stats(user_stats)
+
         main_menu(user)
     elif selected_option == 3:
         print("reg vehicle")
@@ -166,7 +168,7 @@ def main():
                     user_dict["lname"],
                     user_dict["pword"])
 
-        VehicleReg.vehicle_reg(user_dict["user_id"][0][0])
+        VehicleReg.vehicle_reg(user_dict["user_id"])
 
 
     # Main menu.
