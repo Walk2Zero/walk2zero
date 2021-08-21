@@ -191,7 +191,6 @@ def main():
     if Db.check_email(email):
         user.update_email(email)
         user_dict = login.login_existing_user(email)
-        print(user_dict)
         user.log_in(user_dict["user_id"],
                     user_dict["fname"],
                     user_dict["lname"],

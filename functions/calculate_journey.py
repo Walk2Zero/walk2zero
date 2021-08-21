@@ -38,7 +38,6 @@ def get_journey_data():
     input_origin, input_destination = input_locations()
     precise_origin, precise_destination, distances = get_distance(input_origin,
                                                                   input_destination)
-    print(precise_origin, precise_destination)
     return precise_origin, precise_destination, distances
 
 
@@ -83,7 +82,7 @@ def get_distance(origin, destination):
                                    Google Maps.
         distances (dict): Journey distances according to mode of transport.
     """
-    api_key = "AIzaSyATutmnPcuGNLy1JwV2FMksls1Q561WP9o"
+    api_key = "API KEY"
     modes = ["driving", "walking", "bicycling", "transit"]
     distances = dict()
 
