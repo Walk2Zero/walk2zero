@@ -1,7 +1,7 @@
-<img src="https://github.com/Walk2Zero/walk2zero/blob/API_key_guide/screenshots/walk2zero_logo.png?raw=true" alt="Walk2Zero logo" title="Walk2Zero" align="right" height="60" />
+<img src="https://github.com/Walk2Zero/walk2zero/blob/API_key_guide/screenshots/walk2zero_logo.png?raw=true" alt="Walk2Zero logo" title="Walk2Zero" align="right" height="70" />
 
-# Walk2Zero
-Walk2Zero is a group project undertaken as part of the Code First Girls Nanodegree.
+# Walk2Zero 🐾 🌳 
+A group project undertaken as part of the Code First Girls Nanodegree.
 
               __        __    _ _      ____    _____              
               \ \      / /_ _| | | __ |___ \  |__  /___ _ __ ___  
@@ -12,24 +12,22 @@ Walk2Zero is a group project undertaken as part of the Code First Girls Nanodegr
                  C L I M A T E   C O N S C I O U S   S T E P S                  
 
 
-## 🏗 About 
+
+## 🏗  About 
 Walk2Zero is a program that calculates how much carbon a user can 
-potentially offset if they opt for walking or use public 
-transport to get to their point of destination. User can register and 
-log in to the service, check and track their impact. 
+potentially offset if they opt for walking or using public 
+transport to get to their point of destination, and represent it as number of trees being planted. 
+
+User can register and log in to the service, check and track their impact.
 
 The program interacts with Google Maps API and MySQL database.
 
-## 👯 The Team‍️
 
+## 👯  The Team‍️
 - [Lakshika Juneja](https://github.com/Laksh-13)
-
 - [Rajwinder Bhatoe](https://github.com/rajwinderb)
-
 - [Robyn Seymour-Jones](https://github.com/robynfsj)
-
 - [Shuyan Liu](https://github.com/clemcodes)
-
 - [Sravya Betina](https://github.com/Sravya12379)
 
 
@@ -81,11 +79,11 @@ $ pip install requirements.txt
 
 Go to `db/create-db.sql` and run the script in MySQL workbench to set up the database
 
-2. config password 
+2. config DB password 
 
 Go to `config.py`, replace "password" with your own database password :
 ```shell
-PASSWORD = "password"
+PASSWORD = "Your DB Password"
 ```
 
 3. config API key
@@ -100,7 +98,7 @@ Refer to <a href="https://github.com/Walk2Zero/walk2zero/blob/API_key_guide/API_
 
 
 ## Run the code
-make sure you are in the *walk2zero* directory
+Make sure you are in the *walk2zero* directory and run the following command :
 
 ```shell
 $ python main.py
@@ -115,9 +113,4 @@ To get started on the app :
 - Log out
 
 
-
-
-
-
-
-
+Thank you for using Walk2Zero, you are making the world a greener, better place! 🌱 🌳
