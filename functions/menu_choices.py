@@ -1,3 +1,5 @@
+"""Functions that facilitate user selection at the menus."""
+
 import cli_components as cli
 
 
@@ -9,6 +11,7 @@ def option_to_exit(user_input):
 
 
 def main_menu_select_choice():
+    """Allows user to enter which action to perform at the main menu."""
     selected_option = input("Enter option number: ")
     option_to_exit(selected_option)
     try:

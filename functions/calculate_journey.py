@@ -1,4 +1,8 @@
-"""A collection of functions used to calculate a new journey."""
+"""A collection of functions used to calculate a new journey.
+
+This script contains various helper functions that are called by the main
+script in order to calculate a new journey.
+"""
 from datetime import datetime
 import numpy as np
 import pandas as pd
@@ -15,7 +19,13 @@ from config import API_KEY
 # —————————————————————————————————————————————————————————————————————————————
 
 def get_new_journey_id(user_id):
-    """Return the journey id of the users next journey."""
+    """Return the journey id of the users next journey.
+
+    Args:
+        user_id (int): The unique ID of the user.
+    Returns:
+        int: Journey ID for the users next journey.
+    """
     j_id = Db.get_max_journey_id(user_id)
     if j_id is None:
         return 1
@@ -43,7 +53,12 @@ def get_journey_data():
 
 
 def input_locations():
-    """Asks for user input to provide origin and destination locations."""
+    """Asks for user input to provide origin and destination locations.
+
+    Returns:
+        tuple: (origin, destination) where origin and destination are strings
+               of the origin and destination locations inputted by the user.
+    """
     origin = input("Enter your origin location: ")
     menu.option_to_exit(origin)
     try:
@@ -72,16 +87,20 @@ def get_distance(origin, destination):
 
     This function takes the inputted origin and destination, then uses the
     Google Maps API to calculate the possible distances for the route according
-    to the different modes of transport available.
+    to the different modes of transport available. It calls the check_address
+    function for the user to confirm that the addresses outputted by the API
+    are the users intented addresses.
 
     Args:
         origin (str): origin location
         destination (str): destination location
     Returns:
-        precise_origin (str): Precise origin location confirmed by Google Maps.
-        precise_destination (str): Precise destination location confirmed by
-                                   Google Maps.
-        distances (dict): Journey distances according to mode of transport.
+        tuple: (precise_origin, precise_destination, distances) where
+               precise_origin (str) is origin location outputted by the API and
+               confirmed by the user, precise_destination (str) is the
+               destination location outputted by the API and confirmed by the
+               user and distances (dict) contains the journey distances by mode
+               of transport.
     """
     api_key = API_KEY
     modes = ["driving", "walking", "bicycling", "transit"]
@@ -110,7 +129,8 @@ def get_distance(origin, destination):
         precise_origin = origin_address[0]
         precise_destination = destination_address[0]
     except:
-        print("Something has gone wrong! \n Try a new/clearer origin and destination.")
+        print("Something has gone wrong!\n "
+              "Try a new/clearer origin and destination.")
         return get_journey_data()
 
     if not check_address(precise_origin, precise_destination, distances):
@@ -120,6 +140,22 @@ def get_distance(origin, destination):
 
 
 def check_address(origin, destination, distances):
+    """Asks the user to confirm if the output address of the API are correct.
+
+    This function takes user input ("1" or "2") to confirm whether the precise
+    addresses found by the Google Maps API are the ones that they were
+    expecting from the addresses they inputted.
+
+    Args:
+        origin (str): Precise origin outputted by the Google Maps API.
+        destination(str): Precise destination outputted by the Google Maps API.
+        distances(dict): Journey distances by transport mode.
+
+    Returns:
+        bool: True if users are happy with the addresses, false if the
+              addresses were not what they were expecting and want to input
+              them again.
+    """
     cli.display_journey_address_check_options(origin, destination)
     option = input("Enter option number: ")
     menu.option_to_exit(option)
@@ -163,10 +199,12 @@ def api_propose_modes(distances):
     distances dictionary if the distance of the journey is greater than 5 km
     and 100 km respectively.
 
-    :param distances: distances as dictionary (as would be received from the
-                      function get_distance())
-    :return: distances as dictionary only including the viable modes of
-             transport
+    Args:
+        distances (dict): Distances for the calculated journey by mode of
+                          transport as outputted by the Google Maps API.
+    Returns:
+        dict: Distances for the caluclated journey with keys removed for the
+              unviable modes of transport.
     """
     distances = str_to_float(distances)
     if distances['walking'] > 5:
@@ -177,9 +215,14 @@ def api_propose_modes(distances):
 
 
 def api_db_map():
-    """
-    This function maps the API choices of walking, bicycling, driving and
-    transit to our all vehicles table in the DB.
+    """Maps the API transport modes to those stored in the DB.
+
+    This function maps the modes of transport outputted by the Google Maps API
+    (walking, bicycling, driving and transit) to the transport methods stored
+    in the vehicles table of the Walk2Zero DB.
+
+    Returns:
+        A pandas dataframe.
     """
     all_vehicles = Db.fetch_all_vehicles()
 
@@ -204,7 +247,7 @@ def api_db_map():
 
         (df['Vehicle Name'] == 'transit')
     ]
-    values = ['walking', 'bicycling', 'driving', 'transit']  # All API return choices
+    values = ['walking', 'bicycling', 'driving', 'transit']
     # create a new column and use np.select to assign values
     df['API choices'] = np.select(conditions, values)
     return df
@@ -224,10 +267,11 @@ def potential_options(user_id):
     return useroptions_df
 
 
-def proposed_options(distances, user_id):  # would need to call the API Util func
+def proposed_options(distances, user_id):
     """
     Function that matches potential modes of transport to
-    viable modes of transport depending on the API return to propose modes of transport
+    viable modes of transport depending on the API return to propose modes of
+    transport.
     """
     api_return = api_propose_modes(distances)
 
@@ -252,22 +296,31 @@ def proposed_options(distances, user_id):  # would need to call the API Util fun
                              'Total Emissions']]
 
 
-
 def df_dict(df, col_list):
     """Convert Pandas df to dictionary.
-    col_list = ['API choices','Total Emissions'] function call example
-    dict2 = df_dict(proposed_mode,col_list)
+
+    Args:
+        df: Pandas dataframe.
+        col_list: ['API choices','Total Emissions'] function call example
+    Returns:
+        dict: df_dict(proposed_mode,col_list)
     """
     dict1 = dict(df[col_list].values)
     return dict1
 
 
 def str_to_float(distances):
-    """
-    Function to change the string distances in in the dictionary distances from
-    the API and changes them into floats without "km".
-    :param distances: distances as dictionary (as would be received from the function get_distance())
-    :return: distances as dictionary where the values are floats of the distance (km)
+    """Convert string distances to floats, removing "km".
+
+    This function changes the string distances in in the dictionary distances
+    from the Google Maps API and changes them into floats without "km".
+
+    Args:
+        distances (dict): Distances for the calculated journey by mode of
+                          transport as outputted by the Google Maps API in
+                          strings with "km" at the end.
+    Returns:
+        dict: Distances for the calculated journey as floats.
     """
     for key, value in distances.items():
         value = value.replace(',', '')
@@ -276,6 +329,12 @@ def str_to_float(distances):
 
 
 def user_mode_selection(proposed_options):
+    """Asks user to select transportation method for their journey.
+
+    Returns:
+        int: The vehicle ID of the transportation method they wish to take for
+             their journey.
+    """
     print("\nPlease select a Vehicle ID of your desired transport mode from the "
           "following options:\n")
     print(proposed_options[['Vehicle ID',

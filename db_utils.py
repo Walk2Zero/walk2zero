@@ -32,6 +32,12 @@ class DbQuery:
 
     @staticmethod
     def check_email(email):
+        """Checks if user's email address is already in the DB.
+
+        Returns:
+            bool: True if the email address is already registered, False if the
+                  email is not in the DB.
+        """
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -56,6 +62,12 @@ class DbQuery:
 
     @staticmethod
     def authenticate(email, pword):
+        """Checks if the user's password is correct.
+
+        Returns:
+            bool: True if password matches that of the email provided, False if
+                  the password is incorrect.
+        """
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -78,6 +90,7 @@ class DbQuery:
 
     @staticmethod
     def fetch_user_details(email):
+        """Gets user's personal details from the DB."""
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -109,6 +122,7 @@ class DbQuery:
 
     @staticmethod
     def enter_new_user(fname, lname, email, pword):
+        """Enters a new user into the DB."""
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -127,6 +141,7 @@ class DbQuery:
 
     @staticmethod
     def get_new_user_id(email):
+        """Gets the auto-incremented user_id from the DB."""
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -143,6 +158,11 @@ class DbQuery:
 
     @staticmethod
     def get_total_user_journeys(user_id):
+        """Gets total number of journeys made by a user.
+
+        Returns:
+            int: Total number of journeys.
+        """
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -167,6 +187,11 @@ class DbQuery:
 
     @staticmethod
     def get_total_co2_emitted(user_id):
+        """Gets total CO2 emitted by a user.
+
+        Returns:
+            int: Total CO2 emitted by all journeys a user has made.
+        """
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -191,6 +216,11 @@ class DbQuery:
 
     @staticmethod
     def get_total_co2_saved(user_id):
+        """Gets total CO2 saved by a user.
+
+        Returns:
+            int: Total CO2 saved from all journeys made by a user.
+        """
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -215,6 +245,7 @@ class DbQuery:
 
     @staticmethod
     def fetch_all_vehicles():
+        """Get details of all transport methods in the DB."""
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -258,6 +289,7 @@ class DbQuery:
 
     @staticmethod
     def fetch_user_vehicles(user_id):
+        """Get details of the transport methods available to a user."""
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -280,6 +312,7 @@ class DbQuery:
 
     @staticmethod
     def write_user_vehicles(user_id, vehicle_id):
+        """Save transport methods to a user's account."""
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -299,6 +332,7 @@ class DbQuery:
     @staticmethod
     def write_journey(user_id, journey_id, j_datetime, origin, destination,
                       distance, vehicle_id):
+        """Save the details of a new journey made to a user's account."""
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
@@ -322,6 +356,7 @@ class DbQuery:
     @staticmethod
     def write_journey_emissions(user_id, journey_id, carbon_emitted,
                                 carbon_saved):
+        """Save the emissions data of a journey."""
         try:
             db_connection = DbConnection.connect_to_db()
             cur = db_connection.cursor()
