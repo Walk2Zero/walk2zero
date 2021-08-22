@@ -54,7 +54,7 @@ def carbon_to_trees(carbon_offset):
         trees = str(format(num_of_trees * 100, ".2f") + '% of a tree')
 
     print(Fore.GREEN
-          + "Your carbon offset amounted to the equivalent of"
+          + "Your carbon offset amounted to the equivalent of "
           + trees +
           " being planted 🌳🌳🌳 Good job!")
     print('\033[39m')
