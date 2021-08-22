@@ -7,6 +7,7 @@ import requests
 import cli_components as cli
 from db_utils import DbQuery as Db
 import functions.menu_choices as menu
+from config import API_KEY
 
 
 # —————————————————————————————————————————————————————————————————————————————
@@ -82,7 +83,7 @@ def get_distance(origin, destination):
                                    Google Maps.
         distances (dict): Journey distances according to mode of transport.
     """
-    api_key = "API KEY"
+    api_key = API_KEY
     modes = ["driving", "walking", "bicycling", "transit"]
     distances = dict()
 
