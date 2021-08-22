@@ -95,7 +95,7 @@ Refer to <a href="https://github.com/Walk2Zero/walk2zero/blob/API_key_guide/API_
 
 
 ## Run the code
-make sure you are in the *walk2zero* directory
+make sure you are in the *walk2zero* directory and run the following command :
 
 ```shell
 $ python main.py
