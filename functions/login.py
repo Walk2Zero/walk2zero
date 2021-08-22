@@ -1,3 +1,8 @@
+"""Functions to facilitate user log in and new user registration.
+
+This script contains various helper functions that are called by the main
+script in order to log in, authenticate and register users.
+"""
 import re
 
 import cli_components as cli
@@ -6,7 +11,14 @@ import functions.menu_choices as menu
 
 
 def is_valid_email(email):
-    """Checks if email address is of the correct structure."""
+    """Checks if email address is of the correct structure.
+
+    Args:
+        email (str): Email address to validate.
+    Returns:
+        bool: True if email address is of the valid structure, false if it is
+              not of the valid structure.
+    """
     regex = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
     if re.fullmatch(regex, email):
         return True
@@ -15,7 +27,11 @@ def is_valid_email(email):
 
 
 def get_user_email():
-    """Gets email address from user as text input."""
+    """Gets email address from user as text input.
+
+    Returns:
+        str: Email address inputted by the user.
+    """
     email = input("Email address: ")
     menu.option_to_exit(email)
     try:
@@ -30,6 +46,21 @@ def get_user_email():
 
 
 def login_existing_user(email):
+    """Authenticates user and returns their data if password accepted.
+
+    This function takes the user's password as an input and checks that it is
+    the same as the one stored alongside their email address in the Walk2Zero
+    database users table. If an incorrect password is entered, it will run
+    recursively until either a correct password is entered or the user enters
+    "q" to exit the program. If a correct password is entered, it will fetch
+    the user's personal details from the database and return these as a dict.
+
+    Args:
+        email (str): The email address of an existing user that is already
+                     stored in the DB.
+    Returns:
+        dict: User data with the keys 'user_id', 'fname', 'lname' and 'pword'.
+    """
     pword = input("Password: ")
     menu.option_to_exit(pword)
     try:
@@ -45,6 +76,20 @@ def login_existing_user(email):
 
 
 def register_new_user(email):
+    """Takes user's details as inputs, stores to DB and returns them as a dict.
+
+    This function calls several functions that take user input for their
+    personal details. Exception handling is done within each of these rather
+    than within this function itself. This function then calls enter_new_user
+    to store the data in the DB before returning this data in a dict.
+
+    Args:
+        email (str): The user's email address that they entered into the
+                     system when the program first started.
+    Returns:
+        dict: The user's entered data in a dictionary with "user_id", "fname",
+              "lname" and "pword" as keys.
+    """
     cli.header("New User Registration")
     fname = get_new_user_fname()
     lname = get_new_user_lname()
@@ -61,6 +106,11 @@ def register_new_user(email):
 
 
 def get_new_user_fname():
+    """Take user input of their first name.
+
+    Returns:
+        str: The user's first name.
+    """
     fname = input("First name: ")
     menu.option_to_exit(fname)
     try:
@@ -75,6 +125,11 @@ def get_new_user_fname():
 
 
 def get_new_user_lname():
+    """Take user input of their last name.
+
+    Returns:
+        str: The user's last name.
+    """
     lname = input("Last name: ")
     menu.option_to_exit(lname)
     try:
@@ -89,6 +144,11 @@ def get_new_user_lname():
 
 
 def get_new_user_pword():
+    """Take user input of their password.
+
+    Returns:
+        str: The user's password.
+    """
     pword = input("Password (3–20 alphanumeric characters): ")
     menu.option_to_exit(pword)
     try:
@@ -107,6 +167,11 @@ def get_new_user_pword():
 # —————————————————————————————————————————————————————————————————————————————
 
 def vehicle_reg(user_id):
+    """
+    This function asks the user which transportation methods they want to
+    register to their account. Their chosen vehicles are stored to the
+    user_vehicles table of the database.
+    """
     # printing the menu
     all_vehicles = uv_vehicle_map(user_id)
     print("\nWhich transportation methods would you like to be considered when "
@@ -142,11 +207,16 @@ def vehicle_reg(user_id):
 
 
 def uv_vehicle_map(user_id):
-    # using list comprehension to filter out all the intersection of
-    # user-registered vehicles and vehicles in the DB (c,d,e)->tuple o/p for
-    # vehicle db where c is v_id,d is mode, e is emissions value
-    # (a, b)->tuple o/p for user-vehicle_db where a is user-id and b is
-    # vehicle-id
+    """
+    This function uses list comprehension to filter out all the intersection of
+    user-registered vehicles and vehicles in the DB (c,d,e)->tuple o/p for
+    vehicle db where c is v_id,d is mode, e is emissions value
+    (a, b)->tuple o/p for user-vehicle_db where a is user-id and b is
+    vehicle-id.
+
+    Returns:
+        not_registered_vehicles
+    """
     all_vehicles = Db.fetch_all_vehicles()
     user_vehicles = Db.fetch_user_vehicles(user_id)
     registered_vehicles = [(c, d, e) for (c, d, e) in all_vehicles for (a, b) in user_vehicles if (c == b)]

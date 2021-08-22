@@ -1,4 +1,8 @@
-"""main.py"""
+"""Walk2Zero - main.py
+
+This is the main script that should be run to in order to run the Walk2Zero
+application.
+"""
 import cli_components as cli
 from db_utils import DbQuery as Db
 
@@ -48,6 +52,7 @@ class User:
     def update_email(self, email):
         self.email = email
 
+    # Not implemented due to time.
     # def add_vehicle(self, vehicle):
     #     self.vehicles.append(vehicle)
     #
@@ -92,28 +97,13 @@ class Journey:
         self.distance = distance
 
 
-
-    # def update_journey_details(self, journey_id, j_datetime, origin, destination, possible_distances):
-    #     self.journey_id = journey_id
-    #     self.j_datetime = j_datetime
-    #     self.origin = origin
-    #     self.destination = destination
-    #     self.possible_distances = possible_distances
-    #
-    # def update_vehicle_choice(self, vehicle_id, distance):
-    #     self.chosen_vehicle_id = vehicle_id
-    #     self.chosen_distance = distance
-    #
-    # def update_journey_emissions(self, carbon_emitted, carbon_saved):
-    #     self.carbon_emitted = carbon_emitted
-    #     self.carbon_saved = carbon_saved
-
-
 # —————————————————————————————————————————————————————————————————————————————
 # Main menu function
 # —————————————————————————————————————————————————————————————————————————————
 
 def main_menu(user_object):
+    """Runs the required functions to perform the action chosen by the user."""
+
     user = user_object
     cli.header(f"Hello {user.fname} {user.lname}!")
     cli.display_main_menu()
@@ -128,7 +118,6 @@ def main_menu(user_object):
         # calc_journey(journey.user_id)
         # main_menu(user)
 
-
         cli.header("Calculate a New Journey")
         journey = Journey(user.user_id)
         journey.update_journey_id()
@@ -137,7 +126,9 @@ def main_menu(user_object):
         journey.update_locations(origin, destination)
         vehicle_id, carbon_emitted, carbon_saved, distance = \
             calc_journey.get_selection(distances, journey.user_id)
-        journey.update_journey_emissions(vehicle_id, carbon_emitted, carbon_saved, distance)
+        journey.update_journey_emissions(vehicle_id,
+                                         carbon_emitted,
+                                         carbon_saved, distance)
         # Save journey details in DB.
         Db.write_journey(journey.user_id,
                          journey.journey_id,
@@ -203,7 +194,7 @@ def main():
                     user_dict["fname"],
                     user_dict["lname"],
                     user_dict["pword"])
-
+        # Register vehicles (transport types) to the users account.
         login.vehicle_reg(user_dict["user_id"])
 
     # Main menu (see above for main menu function).
