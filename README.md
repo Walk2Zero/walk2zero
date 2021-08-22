@@ -1,4 +1,4 @@
-<img src="https://github.com/Walk2Zero/walk2zero/blob/API_key_guide/screenshots/walk2zero_logo.png?raw=true" alt="Walk2Zero logo" title="Walk2Zero" align="right" height="60" />
+<img src="https://github.com/Walk2Zero/walk2zero/blob/API_key_guide/screenshots/walk2zero_logo.png?raw=true" alt="Walk2Zero logo" title="Walk2Zero" align="right" height="70" />
 
 # Walk2Zero
 Walk2Zero is a group project undertaken as part of the Code First Girls Nanodegree.
@@ -12,13 +12,21 @@ Walk2Zero is a group project undertaken as part of the Code First Girls Nanodegr
                  C L I M A T E   C O N S C I O U S   S T E P S                  
 
 
-## 🌱 About 
+## 🏗  About 
 Walk2Zero is a program that calculates how much carbon a user can 
 potentially offset if they opt for walking or use public 
 transport to get to their point of destination. User can register and 
 log in to the service, check and track their impact. 
 
 The program interacts with Google Maps API and MySQL database.
+
+
+## 👯  The Team‍️
+- [Lakshika Juneja](https://github.com/Laksh-13)
+- [Rajwinder Bhatoe](https://github.com/rajwinderb)
+- [Robyn Seymour-Jones](https://github.com/robynfsj)
+- [Shuyan Liu](https://github.com/clemcodes)
+- [Sravya Betina](https://github.com/Sravya12379)
 
 
 ## Getting Started
@@ -103,9 +111,4 @@ To get started on the app :
 - Log out
 
 
-## 👯 The Team‍️
-- [Lakshika Juneja](https://github.com/Laksh-13)
-- [Rajwinder Bhatoe](https://github.com/rajwinderb)
-- [Robyn Seymour-Jones](https://github.com/robynfsj)
-- [Shuyan Liu](https://github.com/clemcodes)
-- [Sravya Betina](https://github.com/Sravya12379)
+Thank you for using Walk2Zero, you are making the world a greener, better place! 🌱 🌳
