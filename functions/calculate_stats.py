@@ -27,19 +27,17 @@ def carbon_to_trees(carbon_offset):
 
     trees = ''
 
-    if num_of_trees < 1:
-        trees = str(format(num_of_trees * 100, ".2f") + '% of a tree')
-    elif num_of_trees == 1:
-        trees = '1 tree'
-    else:
+    if num_of_trees == 1 or num_of_trees == 0:
+        trees = '{} tree'.format(int(num_of_trees))
+    elif num_of_trees > 1:
         trees = '{} trees'.format(int(num_of_trees))
+    else:
+        trees = str(format(num_of_trees * 100, ".2f") + '% of a tree')
 
-    if trees != 0:
-        print(Fore.GREEN
-              + "Your carbon offset amounted to "
-              + trees +
-              " being planted 🌳🌳🌳 Good job!")
-        print('\033[39m')
+    print(Fore.GREEN
+          + "Your carbon offset amounted to "
+          + trees +
+          " being planted 🌳🌳🌳 Good job!")
+    print('\033[39m')
 
-    # return trees
-
+    return trees
