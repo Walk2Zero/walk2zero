@@ -1,6 +1,6 @@
 import unittest
 from unittest import TestCase, mock
-from functions.propose_mode import str_to_float, propose_modes
+from functions.calculate_journey import str_to_float, api_propose_modes
 
 
 class TestStrToFloat(TestCase):
@@ -19,25 +19,25 @@ class TestStrToFloat(TestCase):
 
 class TestProposeModes(TestCase):
 
-    @mock.patch('functions.propose_mode.str_to_float')
+    @mock.patch('functions.calculate_journey.str_to_float')
     def test_short_distance(self, mock_short_distance):
         mock_short_distance.return_value = {'driving': 4.7, 'walking': 4.0, 'bicycling': 5.6, 'transit': 5.2}
         expected = {'driving': 4.7, 'walking': 4.0, 'bicycling': 5.6, 'transit': 5.2}
-        result = propose_modes({'driving': 4.7, 'walking': 4.0, 'bicycling': 5.6, 'transit': 5.2})
+        result = api_propose_modes({'driving': 4.7, 'walking': 4.0, 'bicycling': 5.6, 'transit': 5.2})
         self.assertEqual(expected, result)
 
-    @mock.patch('functions.propose_mode.str_to_float')
+    @mock.patch('functions.calculate_journey.str_to_float')
     def test_long_distance(self, mock_long_distance):
         mock_long_distance.return_value = {'driving': 6.7, 'walking': 7.0, 'bicycling': 7.6, 'transit': 6.2}
         expected = {'driving': 6.7, 'bicycling': 7.6, 'transit': 6.2}
-        result = propose_modes({'driving': 6.7, 'walking': 7.0, 'bicycling': 7.6, 'transit': 6.2})
+        result = api_propose_modes({'driving': 6.7, 'walking': 7.0, 'bicycling': 7.6, 'transit': 6.2})
         self.assertEqual(expected, result)
 
-    @mock.patch('functions.propose_mode.str_to_float')
+    @mock.patch('functions.calculate_journey.str_to_float')
     def test_super_long_distance(self, mock_super_long_distance):
         mock_super_long_distance.return_value = {'driving': 2205, 'walking': 2188, 'bicycling': 2296, 'transit': 2543}
         expected = {'driving': 2205, 'transit': 2543}
-        result = propose_modes({'driving': 2205, 'walking': 2188, 'bicycling': 2296, 'transit': 2543})
+        result = api_propose_modes({'driving': 2205, 'walking': 2188, 'bicycling': 2296, 'transit': 2543})
         self.assertEqual(expected, result)
 
 
