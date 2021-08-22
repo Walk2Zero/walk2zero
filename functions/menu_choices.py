@@ -16,6 +16,6 @@ def main_menu_select_choice():
             raise ValueError
     except ValueError:
         print("Ooops! Please enter an option number between 1 and 4.\n")
-        main_menu_select_choice()
+        return main_menu_select_choice()
     else:
         return int(selected_option)

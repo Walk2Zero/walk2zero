@@ -1,3 +1,4 @@
 HOST = "localhost"
 USER = "root"
-PASSWORD = "password"
+PASSWORD = "Your DB Password"
+API_KEY = "Your API Key"
