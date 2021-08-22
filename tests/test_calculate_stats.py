@@ -1,23 +1,23 @@
-import unittest
-from unittest import TestCase
+from unittest import TestCase, main
+
 from functions.calculate_stats import carbon_to_trees
 
 
-class TestTreeCalculation(TestCase):
+class TestCarbonToTrees(TestCase):
 
     def test_small_offset(self):
         result = carbon_to_trees(870)
-        expected = '14.65% of a tree'
+        expected = "14.65% of a tree"
         self.assertEqual(expected, result)
 
     def test_zero_offset(self):
         result = carbon_to_trees(0)
-        expected = '0 tree'
+        expected = "0 tree"
         self.assertEqual(expected, result)
 
     def test_large_offset(self):
         result = carbon_to_trees(87000)
-        expected = '14 trees'
+        expected = "14 trees"
         self.assertEqual(expected, result)
 
     def test_return_type(self):
@@ -25,8 +25,5 @@ class TestTreeCalculation(TestCase):
         self.assertIsInstance(result, str)
 
 
-
-
-
-if __name__ == '__main__':
-    unittest.main()
+if __name__ == "__main__":
+    main()
