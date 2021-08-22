@@ -21,15 +21,10 @@ log in to the service, check and track their impact.
 The program interacts with Google Maps API and MySQL database.
 
 ## 👯 The Team‍️
-
 - [Lakshika Juneja](https://github.com/Laksh-13)
-
 - [Rajwinder Bhatoe](https://github.com/rajwinderb)
-
 - [Robyn Seymour-Jones](https://github.com/robynfsj)
-
 - [Shuyan Liu](https://github.com/clemcodes)
-
 - [Sravya Betina](https://github.com/Sravya12379)
 
 
