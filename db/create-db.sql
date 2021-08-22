@@ -98,51 +98,10 @@ VALUES
 -- ('national_rail', 43)
 -- ('coach', 33)
 
-    
--- ------------------------------------------------------------------------------------
--- 3. Triggers to auto fill fields.
--- ------------------------------------------------------------------------------------
-
--- Function to calculate total carbon emitted on a journey.
--- This is used in the after_journey_insert trigger to insert the carbon emissions of 
--- a journey into the emissions table after the journey is entered in the journeys table.
-
--- DELIMITER //
--- CREATE FUNCTION calc_carb_emit(distance DECIMAL(7, 2), vehicle_id INT)
--- RETURNS INT
--- DETERMINISTIC
--- BEGIN
---     DECLARE emissions_per_km INT;
---     DECLARE emitted INT;
---     
---     SELECT v.carb_emit_km INTO emissions_per_km
---     FROM vehicles AS v
---     WHERE v.vehicle_id = vehicle_id;
---     
---     SET emitted = distance * emissions_per_km;
---     RETURN emitted;
--- END
--- //
--- DELIMITER ;
-
-
--- Trigger to calculate carbon emissions of a journey and populate the emissions table.
-
--- DELIMITER //
--- CREATE TRIGGER after_journey_insert
---     AFTER INSERT ON journeys
---     FOR EACH ROW
---         BEGIN
---             INSERT INTO emissions
---             (user_id, journey_id, carbon_emitted)
---             VALUES
---             (NEW.user_id, NEW.journey_id, calc_carb_emit(NEW.distance, NEW.vehicle_id));
---         END//
--- DELIMITER ;
 
 
 -- ------------------------------------------------------------------------------------
--- 4. Populate tables with examples.
+-- 3. Populate tables with examples.
 -- ------------------------------------------------------------------------------------
 
 SELECT * FROM users;

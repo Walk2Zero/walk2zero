@@ -67,14 +67,35 @@ class TestGetDistance(TestCase):
         self.assertEqual(expected, result)
 
 
-# class TestCheckAddress(TestCase):
-#     @mock.patch('functions.calculate_journey.input_locations')
-#     def test_length_less_than_two_origin(self, mock_input_location):
-#         with mock.patch('builtins.input', side_effect=['L', 'B3 3DH']):
-#             mock_input_location.return_value = 0
-#             expected = 0
-#             result = input_locations()
-#             self.assertEqual(expected, result)
+class TestCheckAddress(TestCase):
+    @mock.patch('functions.calculate_journey.check_address')
+    def test_wrong_input(self, mock_check_address):
+        with mock.patch('builtins.input', side_effect=['3']):
+            mock_check_address.return_value = 0
+            origin_address = 'Liverpool L3 8EN, UK'
+            destination_address = 'Birmingham B2 4QA, UK'
+            distances = {'driving': '161 km', 'walking': '143 km', 'bicycling': '154 km', 'transit': '143 km'}
+            expected = 0
+            result = check_address(origin_address, destination_address, distances)
+            self.assertEqual(expected, result)
+
+    def test_addresses_correct(self):
+        with mock.patch('builtins.input', side_effect=['1']):
+            origin_address = 'Liverpool L3 8EN, UK'
+            destination_address = 'Birmingham B2 4QA, UK'
+            distances = {'driving': '161 km', 'walking': '143 km', 'bicycling': '154 km', 'transit': '143 km'}
+            expected = True
+            result = check_address(origin_address, destination_address, distances)
+            self.assertEqual(expected, result)
+
+    def test_addresses_incorrect(self):
+        with mock.patch('builtins.input', side_effect=['2']):
+            origin_address = 'Liverpool L3 8EN, UK'
+            destination_address = 'Birmingham B2 4QA, UK'
+            distances = {'driving': '161 km', 'walking': '143 km', 'bicycling': '154 km', 'transit': '143 km'}
+            expected = False
+            result = check_address(origin_address, destination_address, distances)
+            self.assertEqual(expected, result)
 
 
 class TestStrToFloat(TestCase):
