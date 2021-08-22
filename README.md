@@ -70,7 +70,7 @@ urllib3==1.26.6
 To install these requirements, run in the terminal :
 
 ```shell
-$ pip install requirements.txt
+$ pip install -r requirements.txt
 ```
 
 ## Config
