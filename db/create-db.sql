@@ -58,8 +58,8 @@ CREATE TABLE journeys(
 CREATE TABLE emissions(
     user_id INT,
     journey_id INT,
-    carbon_emitted DECIMAL(7, 3),  -- in grams (for consistency, can convert to kg later) (LJ: I think this is fine)
-    carbon_saved DECIMAL(7, 3), -- grams
+    carbon_emitted DECIMAL(15, 3),  -- in grams (for consistency, can convert to kg later) (LJ: I think this is fine)
+    carbon_saved DECIMAL(15, 3), -- grams
     CONSTRAINT PK_emissions
         PRIMARY KEY (user_id, journey_id),
     CONSTRAINT FK_emissions_journeys
